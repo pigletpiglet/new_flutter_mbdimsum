@@ -1,11 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:new_flutter_mbdimsum/models/cart.dart';
-import 'package:new_flutter_mbdimsum/screens/Add%20Customers/addcustomersScreen.dart';
-import 'package:new_flutter_mbdimsum/screens/Add%20Products/addproductsScreen.dart';
-import 'package:new_flutter_mbdimsum/screens/Check%20Orders/checkordersScreen.dart';
-import 'package:new_flutter_mbdimsum/screens/Order%20Products/orderproductsScreen.dart';
-import 'package:new_flutter_mbdimsum/screens/Product%20Checks/productcheckScreen.dart';
+import 'package:new_flutter_mbdimsum/screens/Add%20Customers/add_customers_screen.dart';
+import 'package:new_flutter_mbdimsum/screens/Add%20Products/add_products_screen.dart';
+import 'package:new_flutter_mbdimsum/screens/Check%20Orders/check_orders_screen.dart';
+import 'package:new_flutter_mbdimsum/screens/Order%20Products/order_products_screen.dart';
+import 'package:new_flutter_mbdimsum/screens/Products%20Check/products_check_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,10 +33,10 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-  final String title;
+  MyHomePage({Key? key, this.title}) : super(key: key);
+  final String? title;
 
-  // Cart order = Cart();
+  Cart cart = Cart.empty();
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -46,14 +46,14 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(widget.title!),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Container(
-              margin: EdgeInsets.symmetric(vertical: 6),
+              margin: const EdgeInsets.symmetric(vertical: 6),
               child: ElevatedButton(
                 child: SizedBox(
                   width: 182,
@@ -85,7 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     MaterialPageRoute(
                       builder: (context) {
                         return OrderProductsScreen(
-                          order: widget.order,
+                          cart: widget.cart,
                         );
                       },
                     ),

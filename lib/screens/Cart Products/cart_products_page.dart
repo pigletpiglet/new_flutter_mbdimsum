@@ -1,22 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:new_flutter_mbdimsum/models/ordersproduct.dart';
-import 'package:new_flutter_mbdimsum/models/products.dart';
+import 'package:new_flutter_mbdimsum/models/cart_items.dart';
 
 class CartProductsPage extends StatefulWidget {
-  OrderProducts products;
+  CartItems products;
   bool buysell;
   CartProductsPage({
-    this.products,
-    this.buysell,
-  });
+    Key? key,
+    required this.products,
+    required this.buysell,
+  }) : super(key: key);
 
   @override
   _CartProductsPageState createState() => _CartProductsPageState();
 }
 
 class _CartProductsPageState extends State<CartProductsPage> {
-  FirebaseFirestore firestore;
+  late FirebaseFirestore firestore;
   @override
   void initState() {
     firestore = FirebaseFirestore.instance;
@@ -30,21 +30,21 @@ class _CartProductsPageState extends State<CartProductsPage> {
         child: Column(
           children: [
             Container(
-              margin: EdgeInsets.symmetric(
+              margin: const EdgeInsets.symmetric(
                 vertical: 10,
                 horizontal: 20,
               ),
-              padding: EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
                     color: Colors.grey.withOpacity(0.5),
                     spreadRadius: 5,
                     blurRadius: 7,
-                    offset: Offset(0, 3), // changes position of shadow
+                    offset: const Offset(0, 3), // changes position of shadow
                   ),
                 ],
-                borderRadius: BorderRadius.all(
+                borderRadius: const BorderRadius.all(
                   Radius.circular(15),
                 ),
                 color: Colors.white,
@@ -54,36 +54,36 @@ class _CartProductsPageState extends State<CartProductsPage> {
                 ),
               ),
               child: TextFormField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: "Product Name",
                   hintText: "e.g Joko.",
                   border: InputBorder.none,
                   enabled: false,
                 ),
-                controller: TextEditingController(
-                    text: widget.products.productname ?? ""),
+                controller:
+                    TextEditingController(text: widget.products.itemName),
                 readOnly: true,
                 onChanged: (String ans) {
-                  widget.products.productname = ans;
+                  widget.products.itemName = ans;
                 },
               ),
             ),
             Container(
-              margin: EdgeInsets.symmetric(
+              margin: const EdgeInsets.symmetric(
                 vertical: 10,
                 horizontal: 20,
               ),
-              padding: EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
                     color: Colors.grey.withOpacity(0.5),
                     spreadRadius: 5,
                     blurRadius: 7,
-                    offset: Offset(0, 3), // changes position of shadow
+                    offset: const Offset(0, 3), // changes position of shadow
                   ),
                 ],
-                borderRadius: BorderRadius.all(
+                borderRadius: const BorderRadius.all(
                   Radius.circular(15),
                 ),
                 color: Colors.white,
@@ -94,8 +94,8 @@ class _CartProductsPageState extends State<CartProductsPage> {
               ),
               child: TextFormField(
                 controller: TextEditingController(
-                    text: widget.products.price.toString() ?? ""),
-                decoration: InputDecoration(
+                    text: widget.products.price.toString()),
+                decoration: const InputDecoration(
                   labelText: "Price",
                   hintText: "e.g 10000",
                   border: InputBorder.none,
@@ -106,21 +106,21 @@ class _CartProductsPageState extends State<CartProductsPage> {
               ),
             ),
             Container(
-              margin: EdgeInsets.symmetric(
+              margin: const EdgeInsets.symmetric(
                 vertical: 10,
                 horizontal: 20,
               ),
-              padding: EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
                     color: Colors.grey.withOpacity(0.5),
                     spreadRadius: 5,
                     blurRadius: 7,
-                    offset: Offset(0, 3), // changes position of shadow
+                    offset: const Offset(0, 3), // changes position of shadow
                   ),
                 ],
-                borderRadius: BorderRadius.all(
+                borderRadius: const BorderRadius.all(
                   Radius.circular(15),
                 ),
                 color: Colors.white,
@@ -131,8 +131,8 @@ class _CartProductsPageState extends State<CartProductsPage> {
               ),
               child: TextFormField(
                 controller: TextEditingController(
-                    text: widget.products.quantity.toString() ?? ""),
-                decoration: InputDecoration(
+                    text: widget.products.quantity.toString()),
+                decoration: const InputDecoration(
                   labelText: "Quantity",
                   hintText: "e.g 5",
                   border: InputBorder.none,
@@ -147,17 +147,17 @@ class _CartProductsPageState extends State<CartProductsPage> {
                       barrierDismissible: false, // user must tap button!
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('Error'),
+                          title: const Text('Error'),
                           content: SingleChildScrollView(
                             child: ListBody(
-                              children: <Widget>[
+                              children: const <Widget>[
                                 Text('Jumlah yang dimasukkan melebih stock'),
                               ],
                             ),
                           ),
                           actions: <Widget>[
                             TextButton(
-                              child: Text('Ok'),
+                              child: const Text('Ok'),
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
@@ -175,7 +175,7 @@ class _CartProductsPageState extends State<CartProductsPage> {
                 onPressed: () {
                   Navigator.pop(context, widget.products);
                 },
-                child: Text("Save"))
+                child: const Text("Save"))
           ],
         ),
       ),

@@ -1,14 +1,20 @@
 class Customer {
-  final String name;
-  final String id;
+  String name;
+  String address;
+  String id;
   // final List history;
   // final List buy;
 
-  Customer({required this.id, required this.name});
+  Customer({required this.address, required this.id, required this.name});
+
+  static Customer empty() {
+    return Customer(address: "", id: "", name: "");
+  }
 
   static Customer fromMap(Map<String, dynamic> data) {
     return Customer(
       id: data['id'] ?? "",
+      address: data['address'] ?? "",
       name: data['name'] ?? "",
     );
   }
@@ -17,6 +23,7 @@ class Customer {
     return {
       "id": id,
       "name": name,
+      "address": address,
     };
   }
 

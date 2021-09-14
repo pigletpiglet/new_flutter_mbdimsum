@@ -1,8 +1,8 @@
-import 'package:new_flutter_mbdimsum/models/mutation.dart';
+import 'package:new_flutter_mbdimsum/models/history.dart';
 
 const diff = Duration.millisecondsPerDay * 100;
 
-extension OrderExtensions on List<Mutation> {
+extension OrderExtensions on List<History> {
   void sortByEventDate() {
     sort(
       (left, right) {

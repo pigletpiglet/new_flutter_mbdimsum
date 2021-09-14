@@ -9,12 +9,12 @@ class AddCustomersPage extends StatefulWidget {
 }
 
 class _AddCustomersPageState extends State<AddCustomersPage> {
-  Customer customer;
-  FirebaseFirestore firestore;
+  late Customer customer;
+  late FirebaseFirestore firestore;
   @override
   void initState() {
     firestore = FirebaseFirestore.instance;
-    customer = new Customer();
+    customer = Customer.empty();
     super.initState();
   }
 
@@ -25,10 +25,10 @@ class _AddCustomersPageState extends State<AddCustomersPage> {
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                 vertical: 20,
               ),
-              child: Text(
+              child: const Text(
                 "Tambahkan Customer",
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
@@ -47,32 +47,16 @@ class _AddCustomersPageState extends State<AddCustomersPage> {
                 customer.address = ans;
               },
             ),
-            NormalInput(
-              hintText: "e.g xxxxx@mail.com",
-              labelText: "Email",
-              function: (String ans) {
-                customer.email = ans;
-              },
-            ),
-            NormalInput(
-              hintText: "e.g. 021xxxxxxx",
-              labelText: "Phone Number",
-              function: (String ans) {
-                customer.phonenumber = int.parse(ans);
-              },
-            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Container(
-                child: ElevatedButton(
-                  child: Text("Save"),
-                  onPressed: () async {
-                    CollectionReference collectionReference =
-                        firestore.collection("Customers");
-                    collectionReference.doc().set(customer.toVariables());
-                    Navigator.pop(context);
-                  },
-                ),
+              child: ElevatedButton(
+                child: const Text("Save"),
+                onPressed: () async {
+                  CollectionReference collectionReference =
+                      firestore.collection("Customers");
+                  collectionReference.doc().set(customer.toVariables());
+                  Navigator.pop(context);
+                },
               ),
             ),
           ],

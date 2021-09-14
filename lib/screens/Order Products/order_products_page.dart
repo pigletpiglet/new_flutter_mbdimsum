@@ -2,52 +2,51 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:new_flutter_mbdimsum/models/customer.dart';
 import 'package:new_flutter_mbdimsum/models/mutation.dart';
-import 'package:new_flutter_mbdimsum/models/orders.dart';
-import 'package:new_flutter_mbdimsum/models/ordersproduct.dart';
+import 'package:new_flutter_mbdimsum/models/cart.dart';
+import 'package:new_flutter_mbdimsum/models/cart_items.dart';
 import 'package:new_flutter_mbdimsum/models/products.dart';
-import 'package:new_flutter_mbdimsum/screens/Add%20Carts/addcartsScreen.dart';
-import 'package:new_flutter_mbdimsum/screens/Cart%20Products/cartproductsScreen.dart';
-import 'package:new_flutter_mbdimsum/screens/Customers/customersScreen.dart';
-import 'package:new_flutter_mbdimsum/widgets/List_Cards.dart';
+import 'package:new_flutter_mbdimsum/screens/Add%20Carts/add_carts_screen.dart';
+import 'package:new_flutter_mbdimsum/screens/Cart%20Products/cart_products_screen.dart';
+import 'package:new_flutter_mbdimsum/screens/Customers/customers_screen.dart';
+import 'package:new_flutter_mbdimsum/widgets/List_Card.dart';
 
 class OrderProductsPage extends StatefulWidget {
-  Order order;
-  OrderProductsPage({this.order});
+  Cart cart;
+  OrderProductsPage({Key? key, required this.cart}) : super(key: key);
   @override
   _OrderProductsPageState createState() => _OrderProductsPageState();
 }
 
 class _OrderProductsPageState extends State<OrderProductsPage> {
-  FirebaseFirestore firestore;
-  List<OrderProducts> listoforderproducts;
-  String namatext;
-  Customer customer;
-  Order pesanan;
+  late FirebaseFirestore firestore;
+  late List<CartItems> cartItems;
+  late String namaText;
+  late Customer customer;
+  late Cart pesanan;
 
   @override
   void initState() {
-    pesanan = new Order();
-    pesanan.customerName = widget.order.customerName;
-    pesanan.dateString = widget.order.dateString;
-    pesanan.datetime = widget.order.datetime;
-    pesanan.droppoint = widget.order.droppoint;
-    pesanan.haspay = widget.order.haspay;
-    pesanan.orderlists = widget.order.orderlists;
-    pesanan.orderNumber = widget.order.orderNumber;
-    pesanan.timeStampString = widget.order.timeStampString;
-    pesanan.totalprice = widget.order.totalprice;
-    pesanan.buysell = widget.order.buysell ?? false;
+    pesanan = Cart.empty();
+    pesanan.customerName = widget.cart.customerName;
+    pesanan.dateString = widget.cart.dateString;
+    pesanan.dateTime = widget.cart.dateTime;
+    pesanan.dropPoint = widget.cart.dropPoint;
+    pesanan.hasPay = widget.cart.hasPay;
+    pesanan.cartItems = widget.cart.cartItems;
+    pesanan.orderNumber = widget.cart.orderNumber;
+    pesanan.timeStampString = widget.cart.timeStampString;
+    pesanan.totalPrice = widget.cart.totalPrice;
+    pesanan.buySell = widget.cart.buySell;
 
-    // namatext = widget.order.customername ?? null;
-    listoforderproducts = [];
+    cartItems = [];
     firestore = FirebaseFirestore.instance;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    namatext = pesanan.customerName ?? null;
-    if (pesanan.orderlists != null) listoforderproducts = pesanan.orderlists;
+    namaText = pesanan.customerName;
+    if (pesanan.cartItems.isNotEmpty) cartItems = pesanan.cartItems;
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -60,18 +59,19 @@ class _OrderProductsPageState extends State<OrderProductsPage> {
                   },
                 ),
               );
-              namatext = customer?.name ?? "";
-              pesanan.customerName = customer?.name ?? null;
-              if (pesanan.droppoint == null)
-                pesanan.droppoint = customer?.address ?? null;
+              namaText = customer.name;
+              pesanan.customerName = customer.name;
+              if (pesanan.dropPoint == null) {
+                pesanan.dropPoint = customer.address;
+              }
               setState(() {});
             },
             child: Container(
-              margin: EdgeInsets.symmetric(
+              margin: const EdgeInsets.symmetric(
                 vertical: 15,
                 horizontal: 20,
               ),
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                 horizontal: 10,
               ),
               decoration: BoxDecoration(
@@ -81,10 +81,10 @@ class _OrderProductsPageState extends State<OrderProductsPage> {
                     color: Colors.grey.withOpacity(0.5),
                     spreadRadius: 5,
                     blurRadius: 7,
-                    offset: Offset(0, 3), // changes position of shadow
+                    offset: const Offset(0, 3), // changes position of shadow
                   ),
                 ],
-                borderRadius: BorderRadius.all(Radius.circular(100)),
+                borderRadius: const BorderRadius.all(Radius.circular(100)),
                 border: Border.all(
                   color: Colors.blue,
                   style: BorderStyle.none,
@@ -92,20 +92,18 @@ class _OrderProductsPageState extends State<OrderProductsPage> {
               ),
               child: Row(
                 children: [
-                  Container(
-                    child: Icon(Icons.people),
-                  ),
+                  const Icon(Icons.people),
                   Expanded(
                     child: Container(
-                      padding: EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Customer"),
-                          SizedBox(
+                          const Text("Customer"),
+                          const SizedBox(
                             height: 4,
                           ),
-                          Text(namatext ?? "Masukkan Customer"),
+                          Text(namaText ?? "Masukkan Customer"),
                         ],
                       ),
                     ),
@@ -115,11 +113,11 @@ class _OrderProductsPageState extends State<OrderProductsPage> {
             ),
           ),
           Container(
-            margin: EdgeInsets.symmetric(
+            margin: const EdgeInsets.symmetric(
               vertical: 15,
               horizontal: 20,
             ),
-            padding: EdgeInsets.symmetric(
+            padding: const EdgeInsets.symmetric(
               horizontal: 10,
             ),
             decoration: BoxDecoration(
@@ -133,14 +131,14 @@ class _OrderProductsPageState extends State<OrderProductsPage> {
                     color: Colors.grey.withOpacity(0.5),
                     spreadRadius: 5,
                     blurRadius: 7,
-                    offset: Offset(0, 3), // changes position of shadow
+                    offset: const Offset(0, 3), // changes position of shadow
                   ),
                 ]),
             child: TextFormField(
               onChanged: (String ans) {
-                pesanan.droppoint = ans;
+                pesanan.dropPoint = ans;
               },
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: InputBorder.none,
                 icon: Icon(Icons.map),
                 labelText: "Drop Point",
@@ -149,7 +147,7 @@ class _OrderProductsPageState extends State<OrderProductsPage> {
                 fontSize: 16,
               ),
               controller: TextEditingController(
-                text: pesanan.droppoint ?? "",
+                text: pesanan.dropPoint,
               ),
             ),
           ),
@@ -163,24 +161,25 @@ class _OrderProductsPageState extends State<OrderProductsPage> {
                   },
                 ),
               );
-              if (orderProductsSementara != null)
-                listoforderproducts.add(
-                  OrderProducts(
+              if (orderProductsSementara != null) {
+                cartItems.add(
+                  CartItems(
                     price: orderProductsSementara.price,
-                    productname: orderProductsSementara.name,
+                    itemName: orderProductsSementara.name,
                     quantity: 1,
-                    productid: orderProductsSementara.productid,
+                    itemID: orderProductsSementara.productId,
                     stock: orderProductsSementara.stock,
                   ),
                 );
+              }
               setState(() {});
             },
             child: Container(
-              margin: EdgeInsets.symmetric(
+              margin: const EdgeInsets.symmetric(
                 vertical: 15,
                 horizontal: 20,
               ),
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                 horizontal: 10,
               ),
               decoration: BoxDecoration(
@@ -190,10 +189,10 @@ class _OrderProductsPageState extends State<OrderProductsPage> {
                     color: Colors.grey.withOpacity(0.5),
                     spreadRadius: 5,
                     blurRadius: 7,
-                    offset: Offset(0, 3), // changes position of shadow
+                    offset: const Offset(0, 3), // changes position of shadow
                   ),
                 ],
-                borderRadius: BorderRadius.all(Radius.circular(100)),
+                borderRadius: const BorderRadius.all(Radius.circular(100)),
                 border: Border.all(
                   color: Colors.blue,
                   style: BorderStyle.none,
@@ -202,20 +201,20 @@ class _OrderProductsPageState extends State<OrderProductsPage> {
               child: Row(
                 children: [
                   Container(
-                    padding: EdgeInsets.all(5),
-                    child: Icon(
+                    padding: const EdgeInsets.all(5),
+                    child: const Icon(
                       Icons.add,
                       size: 25,
                     ),
                   ),
                   Expanded(
                     child: Container(
-                      padding: EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
                       child: Container(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           horizontal: 4,
                         ),
-                        child: Text(
+                        child: const Text(
                           "Add Products",
                           style: TextStyle(
                             fontSize: 24,
@@ -235,35 +234,35 @@ class _OrderProductsPageState extends State<OrderProductsPage> {
               children: [
                 Builder(
                   builder: (context) {
-                    var color;
-                    if (pesanan.buysell)
+                    MaterialColor color;
+                    if (pesanan.buySell) {
                       color = Colors.green;
-                    else
+                    } else {
                       color = Colors.red;
-                    return Container(
-                      child: IconButton(
-                        icon: Icon(
-                          Icons.shopping_cart,
-                          color: color,
-                        ),
-                        onPressed: () {
-                          if (pesanan.buysell) {
-                            pesanan.buysell = false;
-                          } else {
-                            pesanan.buysell = true;
-                          }
-                          setState(() {});
-                        },
+                    }
+                    return IconButton(
+                      icon: Icon(
+                        Icons.shopping_cart,
+                        color: color,
                       ),
+                      onPressed: () {
+                        if (pesanan.buySell) {
+                          pesanan.buySell = false;
+                        } else {
+                          pesanan.buySell = true;
+                        }
+                        setState(() {});
+                      },
                     );
                   },
                 ),
                 Builder(
                   builder: (context) {
-                    if (pesanan.buysell)
-                      return Text("Beli");
-                    else
-                      return Text("Jual");
+                    if (pesanan.buySell) {
+                      return const Text("Beli");
+                    } else {
+                      return const Text("Jual");
+                    }
                   },
                 ),
               ],
@@ -278,48 +277,44 @@ class _OrderProductsPageState extends State<OrderProductsPage> {
             ),
             child: Column(
               children: [
-                Container(
-                  child: Text("Pesanan"),
-                ),
+                const Text("Pesanan"),
                 ListView.builder(
                   itemBuilder: (context, i) {
                     return Container(
-                      padding: EdgeInsets.all(6),
+                      padding: const EdgeInsets.all(6),
                       child: Row(
                         children: [
                           Expanded(
-                            child: Container(
-                              child: InkWell(
-                                  onTap: () async {
-                                    OrderProducts sementara =
-                                        await Navigator.of(context)
-                                            .push(MaterialPageRoute(
-                                      builder: (context) {
-                                        return CartProductsScreen(
-                                          products: listoforderproducts[i],
-                                          buysell: pesanan.buysell,
-                                        );
-                                      },
-                                    ));
-                                    if (sementara?.productname != null)
-                                      listoforderproducts[i] = sementara;
-                                    setState(() {});
-                                  },
-                                  child: ListCards(
-                                    cardsName:
-                                        listoforderproducts[i].productname,
-                                    cardsType: "Products",
-                                    icons: Icons.shopping_bag,
-                                    quantity: listoforderproducts[i].quantity,
-                                    price: listoforderproducts[i].price,
-                                  )),
-                            ),
+                            child: InkWell(
+                                onTap: () async {
+                                  CartItems listCartItems =
+                                      await Navigator.of(context)
+                                          .push(MaterialPageRoute(
+                                    builder: (context) {
+                                      return CartProductsScreen(
+                                        cartItems: cartItems[i],
+                                        buysell: pesanan.buySell,
+                                      );
+                                    },
+                                  ));
+                                  if (listCartItems.itemName.isNotEmpty) {
+                                    cartItems[i] = listCartItems;
+                                  }
+                                  setState(() {});
+                                },
+                                child: ListCard(
+                                  cardsName: cartItems[i].itemName,
+                                  cardsType: "Products",
+                                  icons: Icons.shopping_bag,
+                                  quantity: cartItems[i].quantity,
+                                  price: cartItems[i].price,
+                                )),
                           ),
                           IconButton(
                             icon: const Icon(Icons.delete),
                             color: Colors.red,
                             onPressed: () {
-                              listoforderproducts.removeAt(i);
+                              cartItems.removeAt(i);
                               setState(() {});
                             },
                           ),
@@ -327,7 +322,7 @@ class _OrderProductsPageState extends State<OrderProductsPage> {
                       ),
                     );
                   },
-                  itemCount: listoforderproducts.length ?? 0,
+                  itemCount: cartItems.length,
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                 ),
@@ -336,22 +331,22 @@ class _OrderProductsPageState extends State<OrderProductsPage> {
           ),
           ElevatedButton(
               onPressed: () {
-                Mutation x = new Mutation();
-                pesanan.datetime = pesanan.datetime ?? DateTime.now();
-                pesanan.haspay = pesanan.haspay ?? false;
-                pesanan.hassend = pesanan.haspay ?? false;
-                pesanan.orderlists = listoforderproducts ?? [];
-                pesanan.totalprice = pesanan.getTotalPrice() ?? 0;
-                if (pesanan.orderNumber == null) {
+                Mutation x = Mutation.empty();
+                pesanan.dateTime = pesanan.dateTime;
+                pesanan.hasPay = pesanan.hasPay;
+                pesanan.hasSend = pesanan.hasSend;
+                pesanan.cartItems = cartItems;
+                pesanan.totalPrice = pesanan.getTotalPrice();
+                if (pesanan.orderNumber.isNotEmpty) {
                   pesanan.orderNumber = pesanan.getRandomString(8);
                   firestore
                       .collection("Orders")
                       .doc(pesanan.orderNumber)
                       .set(pesanan.toVariables());
-                  for (var detes in listoforderproducts) {
-                    x.buysell = pesanan.buysell;
+                  for (var detes in cartItems) {
+                    x.buySell = pesanan.buySell;
                     x.customerName = pesanan.customerName;
-                    x.datetime = pesanan.datetime;
+                    x.dateTime = pesanan.dateTime;
                     x.quantity = detes.quantity;
                     x.price = detes.price;
                     x.total = x.quantity * x.price;
@@ -360,11 +355,11 @@ class _OrderProductsPageState extends State<OrderProductsPage> {
                         .collection("Orders")
                         .doc(pesanan.orderNumber)
                         .collection("Orderlists")
-                        .doc(pesanan.orderNumber + detes.productname)
+                        .doc(pesanan.orderNumber + detes.itemName)
                         .set(detes.toVariables());
 
-                    var itung;
-                    if (x.buysell) {
+                    int itung;
+                    if (x.buySell) {
                       itung = detes.stock + x.quantity;
                     } else {
                       itung = detes.stock - x.quantity;
@@ -373,12 +368,12 @@ class _OrderProductsPageState extends State<OrderProductsPage> {
                     //Write Stock
                     firestore
                         .collection("Products")
-                        .doc(detes.productid)
+                        .doc(detes.itemID)
                         .update({"stock": itung});
                     //Write Mutasi
                     firestore
                         .collection("Products")
-                        .doc(detes.productid)
+                        .doc(detes.itemID)
                         .collection("Mutasi")
                         .doc(pesanan.orderNumber)
                         .set(x.toVariables());
@@ -388,24 +383,24 @@ class _OrderProductsPageState extends State<OrderProductsPage> {
                       .collection("Orders")
                       .doc(pesanan.orderNumber)
                       .update(pesanan.toVariables());
-                  for (var detes in listoforderproducts) {
-                    x.buysell = pesanan.buysell;
+                  for (var detes in cartItems) {
+                    x.buySell = pesanan.buySell;
                     x.customerName = pesanan.customerName;
-                    x.datetime = pesanan.datetime;
+                    x.dateTime = pesanan.dateTime;
                     x.quantity = detes.quantity;
                     x.price = detes.price;
                     x.total = x.quantity * x.price;
 
-                    var itung;
+                    int itung;
 // Update Order
                     firestore
                         .collection("Orders")
                         .doc(pesanan.orderNumber)
                         .collection("Orderlists")
-                        .doc(pesanan.orderNumber + detes.productname)
+                        .doc(pesanan.orderNumber + detes.itemName)
                         .update(detes.toVariables());
 // Update Stock
-                    if (x.buysell) {
+                    if (x.buySell) {
                       itung = detes.stock + x.quantity;
                     } else {
                       itung = detes.stock - x.quantity;
@@ -413,23 +408,23 @@ class _OrderProductsPageState extends State<OrderProductsPage> {
                     x.stock = itung;
                     firestore
                         .collection("Products")
-                        .doc(detes.productid)
+                        .doc(detes.itemID)
                         .update({"stock": itung});
 
 // Update Mutasi
                     firestore
                         .collection("Products")
-                        .doc(detes.productid)
+                        .doc(detes.itemID)
                         .collection("Mutasi")
                         .doc(pesanan.orderNumber)
                         .update(x.toVariables());
                   }
                 }
 
-                pesanan = new Order();
+                pesanan = Cart.empty();
                 Navigator.pop(context);
               },
-              child: Text("Save"))
+              child: const Text("Save"))
         ],
       ),
     );

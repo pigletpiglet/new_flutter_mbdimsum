@@ -6,10 +6,11 @@ class NormalInput extends StatefulWidget {
   String labelText;
 
   NormalInput({
+    Key? key,
     required this.function,
     required this.labelText,
     required this.hintText,
-  });
+  }) : super(key: key);
 
   @override
   _NormalInputState createState() => _NormalInputState();
@@ -19,21 +20,21 @@ class _NormalInputState extends State<NormalInput> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(
+      margin: const EdgeInsets.symmetric(
         vertical: 10,
         horizontal: 20,
       ),
-      padding: EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.5),
             spreadRadius: 5,
             blurRadius: 7,
-            offset: Offset(0, 3), // changes position of shadow
+            offset: const Offset(0, 3), // changes position of shadow
           ),
         ],
-        borderRadius: BorderRadius.all(
+        borderRadius: const BorderRadius.all(
           Radius.circular(15),
         ),
         color: Colors.white,

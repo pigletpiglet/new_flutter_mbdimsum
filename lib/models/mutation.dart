@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:new_flutter_mbdimsum/functions/date_parser.dart';
-import 'package:new_flutter_mbdimsum/models/cart_items.dart';
 import 'package:intl/intl.dart';
 
 class Mutation {
@@ -9,44 +8,57 @@ class Mutation {
   String customerName;
   String timeStampString;
   String dateString;
-  DateTime datetime;
+  DateTime dateTime;
   int quantity;
   int total;
   int price;
   int stock;
-  bool buysell;
+  bool buySell;
 
   Mutation({
     required this.orderNumber,
     required this.quantity,
     required this.stock,
-    required this.datetime,
-    required this.buysell,
+    required this.dateTime,
+    required this.buySell,
     required this.total,
     required this.customerName,
     required this.price,
-  })  : timeStampString = DateFormat("HH:mm").format(datetime),
-        dateString = DateParser.parseDate(datetime);
+  })  : timeStampString = DateFormat("HH:mm").format(dateTime),
+        dateString = DateParser.parseDate(dateTime);
 
   static Mutation fromMap(Map<String, dynamic> data) {
     return Mutation(
       orderNumber: data['ordernumber'] ?? "",
-      datetime: DateTime.tryParse(data["datetime"]) ?? DateTime.now(),
+      dateTime: DateTime.tryParse(data["datetime"]) ?? DateTime.now(),
       quantity: data['quantity'] ?? 0,
       total: data['total'] ?? 0,
-      buysell: data['buysell'] ?? false,
+      buySell: data['buysell'] ?? false,
       customerName: data['customername'] ?? "",
       price: data['price'] ?? 0,
       stock: data['stock'] ?? 0,
     );
   }
 
+  static Mutation empty() {
+    return Mutation(
+      buySell: false,
+      customerName: '',
+      dateTime: DateTime.now(),
+      orderNumber: '',
+      price: 0,
+      quantity: 0,
+      stock: 0,
+      total: 0,
+    );
+  }
+
   Map<String, dynamic> toVariables() {
     return {
       "ordernumber": orderNumber,
-      "datetime": datetime.toIso8601String(),
+      "datetime": dateTime.toIso8601String(),
       "quantity": quantity,
-      "buysell": buysell,
+      "buysell": buySell,
       "total": total,
       "customername": customerName,
       "price": price,

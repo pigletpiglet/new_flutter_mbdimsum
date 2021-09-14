@@ -44,6 +44,20 @@ class Cart {
     );
   }
 
+  static Cart empty() {
+    return Cart(
+      buySell: false,
+      cartItems: [],
+      customerName: '',
+      dateTime: DateTime.now(),
+      dropPoint: '',
+      hasPay: false,
+      hasSend: false,
+      orderNumber: '',
+      totalPrice: 0,
+    );
+  }
+
   Map<String, dynamic> toVariables() {
     return {
       "ordernumber": orderNumber,

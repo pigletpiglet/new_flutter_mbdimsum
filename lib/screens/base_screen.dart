@@ -13,7 +13,7 @@ class _BaseScreensState extends State<BaseScreens> {
     return Scaffold(
       appBar: AppBar(),
       body: Padding(
-        padding: EdgeInsets.all(1),
+        padding: const EdgeInsets.all(1),
         child: _content(context),
       ),
     );

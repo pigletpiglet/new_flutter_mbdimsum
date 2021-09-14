@@ -7,10 +7,11 @@ import 'package:new_flutter_mbdimsum/screens/base_screen.dart';
 class ProductMutationScreen extends BaseScreens {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  Products products;
+  final Products products;
 
-  ProductMutationScreen({this.products});
+  ProductMutationScreen({required this.products});
 
+  @override
   Widget content(context) {
     return ProductMutationPage(
       products: products,

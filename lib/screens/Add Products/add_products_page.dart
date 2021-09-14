@@ -9,12 +9,12 @@ class AddProductsPage extends StatefulWidget {
 }
 
 class _AddProductsPageState extends State<AddProductsPage> {
-  Products products;
-  FirebaseFirestore firestore;
+  late Products products;
+  late FirebaseFirestore firestore;
   @override
   void initState() {
     firestore = FirebaseFirestore.instance;
-    products = new Products();
+    products = Products.empty();
     super.initState();
   }
 
@@ -25,10 +25,10 @@ class _AddProductsPageState extends State<AddProductsPage> {
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                 vertical: 20,
               ),
-              child: Text(
+              child: const Text(
                 "Tambahkan Produk Baru",
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
@@ -56,19 +56,17 @@ class _AddProductsPageState extends State<AddProductsPage> {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Container(
-                child: ElevatedButton(
-                  child: Text("Save"),
-                  onPressed: () async {
-                    products.productid = products.getRandomString(8);
-                    CollectionReference collectionReference =
-                        firestore.collection("Products");
-                    collectionReference
-                        .doc(products.productid)
-                        .set(products.toVariables());
-                    Navigator.pop(context);
-                  },
-                ),
+              child: ElevatedButton(
+                child: const Text("Save"),
+                onPressed: () async {
+                  products.productId = products.getRandomString(8);
+                  CollectionReference collectionReference =
+                      firestore.collection("Products");
+                  collectionReference
+                      .doc(products.productId)
+                      .set(products.toVariables());
+                  Navigator.pop(context);
+                },
               ),
             ),
           ],

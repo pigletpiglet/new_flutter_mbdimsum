@@ -2,11 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:new_flutter_mbdimsum/models/customer.dart';
 import 'package:new_flutter_mbdimsum/models/history.dart';
-import 'package:new_flutter_mbdimsum/models/orders.dart';
-import 'package:new_flutter_mbdimsum/models/ordersproduct.dart';
-import 'package:new_flutter_mbdimsum/order_extensions.dart';
+import 'package:new_flutter_mbdimsum/models/cart.dart';
+import 'package:new_flutter_mbdimsum/models/cart_items.dart';
+import 'package:new_flutter_mbdimsum/extensions/cart_extensions.dart';
 
-import 'package:new_flutter_mbdimsum/screens/Order%20Products/orderproductsScreen.dart';
+import 'package:new_flutter_mbdimsum/screens/Order%20Products/order_products_screen.dart';
 
 class CheckOrdersPage extends StatefulWidget {
   @override
@@ -14,18 +14,20 @@ class CheckOrdersPage extends StatefulWidget {
 }
 
 class _CheckOrdersPageState extends State<CheckOrdersPage> {
-  FirebaseFirestore firestore;
-  QuerySnapshot col, subcol;
-  List<Order> datalists;
+  late FirebaseFirestore firestore;
+  late QuerySnapshot col, subcol;
+  late List<Cart> carts;
+
   @override
   void initState() {
     firestore = FirebaseFirestore.instance;
     super.initState();
   }
 
-  String namatext;
-  Customer customer;
-  CollectionReference collection;
+  late String namaText;
+  late Customer customer;
+  late CollectionReference collection;
+
   @override
   Widget build(BuildContext context) {
     collection = firestore.collection('Orders');
@@ -39,31 +41,34 @@ class _CheckOrdersPageState extends State<CheckOrdersPage> {
                   future: futureKumpulan(),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) return Container();
-                    datalists.sortByEventDate();
+                    carts.sortByEventDate();
                     return ListView.builder(
                       itemBuilder: (context, i) {
-                        var leftcolor, rightcolor;
-                        if (datalists[i].hassend)
-                          leftcolor = Colors.green;
-                        else
-                          leftcolor = Colors.red;
-                        if (datalists[i].haspay)
-                          rightcolor = Colors.green;
-                        else
-                          rightcolor = Colors.red;
-                        if (datalists[i].hassend && datalists[i].haspay) {
-                          History history = new History(
-                            buysell: datalists[i].buysell,
-                            customerName: datalists[i].customerName,
-                            datetime: datalists[i].datetime,
-                            droppoint: datalists[i].droppoint,
-                            orderlists: datalists[i].orderlists,
-                            orderNumber: datalists[i].orderNumber,
-                            totalprice: datalists[i].totalprice,
+                        MaterialColor leftColor;
+                        MaterialColor rightColor;
+                        if (carts[i].hasSend) {
+                          leftColor = Colors.green;
+                        } else {
+                          leftColor = Colors.red;
+                        }
+                        if (carts[i].hasPay) {
+                          rightColor = Colors.green;
+                        } else {
+                          rightColor = Colors.red;
+                        }
+                        if (carts[i].hasSend && carts[i].hasPay) {
+                          History history = History(
+                            buySell: carts[i].buySell,
+                            customerName: carts[i].customerName,
+                            dateTime: carts[i].dateTime,
+                            dropPoint: carts[i].dropPoint,
+                            cartItems: carts[i].cartItems,
+                            orderNumber: carts[i].orderNumber,
+                            totalPrice: carts[i].totalPrice,
                           );
                           firestore
                               .collection("History")
-                              .doc(datalists[i].orderNumber)
+                              .doc(carts[i].orderNumber)
                               .set(history.toVariables());
                           return Container();
                         }
@@ -73,7 +78,7 @@ class _CheckOrdersPageState extends State<CheckOrdersPage> {
                               MaterialPageRoute(
                                 builder: (context) {
                                   return OrderProductsScreen(
-                                    order: datalists[i],
+                                    cart: carts[i],
                                   );
                                 },
                               ),
@@ -81,8 +86,8 @@ class _CheckOrdersPageState extends State<CheckOrdersPage> {
                             setState(() {});
                           },
                           child: Container(
-                            padding: EdgeInsets.all(0),
-                            margin: EdgeInsets.all(0),
+                            padding: const EdgeInsets.all(0),
+                            margin: const EdgeInsets.all(0),
                             decoration: BoxDecoration(
                                 border: Border.all(style: BorderStyle.solid)),
                             child: Column(
@@ -91,26 +96,26 @@ class _CheckOrdersPageState extends State<CheckOrdersPage> {
                                   children: [
                                     Expanded(
                                       child: Container(
-                                        margin: EdgeInsets.symmetric(
+                                        margin: const EdgeInsets.symmetric(
                                           vertical: 10,
                                           horizontal: 15,
                                         ),
-                                        padding: EdgeInsets.symmetric(
+                                        padding: const EdgeInsets.symmetric(
                                           horizontal: 10,
                                         ),
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text(
+                                            const Text(
                                               "Customers",
                                               style: TextStyle(
                                                 fontSize: 12,
                                               ),
                                             ),
                                             Text(
-                                              datalists[i].customerName,
-                                              style: TextStyle(
+                                              carts[i].customerName,
+                                              style: const TextStyle(
                                                 fontSize: 18,
                                               ),
                                             ),
@@ -119,43 +124,44 @@ class _CheckOrdersPageState extends State<CheckOrdersPage> {
                                       ),
                                     ),
                                     Container(
-                                      margin: EdgeInsets.symmetric(
+                                      margin: const EdgeInsets.symmetric(
                                         vertical: 10,
                                         horizontal: 15,
                                       ),
-                                      padding: EdgeInsets.symmetric(
+                                      padding: const EdgeInsets.symmetric(
                                         horizontal: 10,
                                       ),
                                       child: Builder(
                                         builder: (context) {
-                                          if (datalists[i].buysell)
-                                            return Text("Beli");
-                                          else
-                                            return Text("Jual");
+                                          if (carts[i].buySell) {
+                                            return const Text("Beli");
+                                          } else {
+                                            return const Text("Jual");
+                                          }
                                         },
                                       ),
                                     ),
                                     Container(
-                                      margin: EdgeInsets.symmetric(
+                                      margin: const EdgeInsets.symmetric(
                                         vertical: 10,
                                         horizontal: 15,
                                       ),
-                                      padding: EdgeInsets.symmetric(
+                                      padding: const EdgeInsets.symmetric(
                                         horizontal: 10,
                                       ),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text(
+                                          const Text(
                                             "Date",
                                             style: TextStyle(
                                               fontSize: 15,
                                             ),
                                           ),
                                           Text(
-                                            datalists[i].dateString,
-                                            style: TextStyle(
+                                            carts[i].dateString,
+                                            style: const TextStyle(
                                               fontSize: 16,
                                             ),
                                           ),
@@ -167,14 +173,14 @@ class _CheckOrdersPageState extends State<CheckOrdersPage> {
                                 Row(
                                   children: [
                                     Container(
-                                      padding: EdgeInsets.symmetric(
+                                      padding: const EdgeInsets.symmetric(
                                         horizontal: 15,
                                         vertical: 5,
                                       ),
                                       child: IconButton(
                                         icon: Icon(
                                           Icons.shopping_cart,
-                                          color: leftcolor,
+                                          color: leftColor,
                                           size: 30,
                                         ),
                                         onPressed: () async {
@@ -184,11 +190,11 @@ class _CheckOrdersPageState extends State<CheckOrdersPage> {
                                                 false, // user must tap button!
                                             builder: (BuildContext context) {
                                               return AlertDialog(
-                                                title: Text(
+                                                title: const Text(
                                                     'Apakah sudah dikirim'),
                                                 content: SingleChildScrollView(
                                                   child: ListBody(
-                                                    children: <Widget>[
+                                                    children: const <Widget>[
                                                       Text(
                                                           'Pastikan Barang sudah dikirim'),
                                                     ],
@@ -196,7 +202,7 @@ class _CheckOrdersPageState extends State<CheckOrdersPage> {
                                                 ),
                                                 actions: <Widget>[
                                                   TextButton(
-                                                    child: Text('Sudah'),
+                                                    child: const Text('Sudah'),
                                                     onPressed: () {
                                                       Navigator.of(context)
                                                           .pop(true);
@@ -207,29 +213,29 @@ class _CheckOrdersPageState extends State<CheckOrdersPage> {
                                                       Navigator.of(context)
                                                           .pop(false);
                                                     },
-                                                    child: Text("Batal"),
+                                                    child: const Text("Batal"),
                                                   )
                                                 ],
                                               );
                                             },
                                           );
                                           collection
-                                              .doc(datalists[i].orderNumber)
+                                              .doc(carts[i].orderNumber)
                                               .update({"hassend": x});
                                           setState(() {});
-                                          return x;
+                                          // return x;
                                         },
                                       ),
                                     ),
                                     Container(
-                                      padding: EdgeInsets.symmetric(
+                                      padding: const EdgeInsets.symmetric(
                                         horizontal: 15,
                                         vertical: 5,
                                       ),
                                       child: IconButton(
                                         icon: Icon(
                                           Icons.payment,
-                                          color: rightcolor,
+                                          color: rightColor,
                                           size: 30,
                                         ),
                                         onPressed: () async {
@@ -239,11 +245,11 @@ class _CheckOrdersPageState extends State<CheckOrdersPage> {
                                                 false, // user must tap button!
                                             builder: (BuildContext context) {
                                               return AlertDialog(
-                                                title: Text(
+                                                title: const Text(
                                                     'Apakah sudah dibayar'),
                                                 content: SingleChildScrollView(
                                                   child: ListBody(
-                                                    children: <Widget>[
+                                                    children: const <Widget>[
                                                       Text(
                                                           'Pastikan Barang sudah dibayar'),
                                                     ],
@@ -251,7 +257,7 @@ class _CheckOrdersPageState extends State<CheckOrdersPage> {
                                                 ),
                                                 actions: <Widget>[
                                                   TextButton(
-                                                    child: Text('Sudah'),
+                                                    child: const Text('Sudah'),
                                                     onPressed: () {
                                                       Navigator.of(context)
                                                           .pop(true);
@@ -262,27 +268,24 @@ class _CheckOrdersPageState extends State<CheckOrdersPage> {
                                                       Navigator.of(context)
                                                           .pop(false);
                                                     },
-                                                    child: Text("Batal"),
+                                                    child: const Text("Batal"),
                                                   )
                                                 ],
                                               );
                                             },
                                           );
                                           collection
-                                              .doc(datalists[i].orderNumber)
+                                              .doc(carts[i].orderNumber)
                                               .update({"haspay": x});
                                           setState(() {});
-                                          return x;
                                         },
                                       ),
                                     ),
                                     Expanded(
                                       child: Column(
                                         children: [
-                                          Text("Price"),
-                                          Text(datalists[i]
-                                              .totalprice
-                                              .toString()),
+                                          const Text("Price"),
+                                          Text(carts[i].totalPrice.toString()),
                                         ],
                                       ),
                                     ),
@@ -293,7 +296,7 @@ class _CheckOrdersPageState extends State<CheckOrdersPage> {
                           ),
                         );
                       },
-                      itemCount: datalists.length ?? 0,
+                      itemCount: carts.length,
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                     );
@@ -307,18 +310,18 @@ class _CheckOrdersPageState extends State<CheckOrdersPage> {
 
   Future<bool> futureKumpulan() async {
     col = await collection.get();
-    datalists = [];
+    carts = [];
     for (var detes in col.docs) {
-      var orderss = Order.fromMap(detes.data());
-      orderss.orderlists = [];
+      var orderss = Cart.fromMap(detes.data());
+      orderss.cartItems = [];
       subcol = await collection
           .doc(orderss.orderNumber)
           .collection("Orderlists")
           .get();
       for (var dates in subcol.docs) {
-        orderss.orderlists.add(OrderProducts.fromMap(dates.data()));
+        orderss.cartItems.add(CartItems.fromMap(dates.data()));
       }
-      datalists.add(orderss);
+      carts.add(orderss);
     }
     return true;
   }

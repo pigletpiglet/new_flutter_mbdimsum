@@ -14,6 +14,15 @@ class Products {
     // this.transactions,
   });
 
+  static Products empty() {
+    return Products(
+      name: '',
+      price: 0,
+      productId: '',
+      stock: 0,
+    );
+  }
+
   static Products fromMap(Map<String, dynamic> data) {
     return Products(
       productId: data['productid'] ?? "",

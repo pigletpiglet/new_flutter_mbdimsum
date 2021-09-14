@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:new_flutter_mbdimsum/models/products.dart';
 import 'package:new_flutter_mbdimsum/screens/Products%20Mutation/products_mutation_screen.dart';
-import 'package:new_flutter_mbdimsum/widgets/List_Cards.dart';
+import 'package:new_flutter_mbdimsum/widgets/list_card.dart';
 
 class ProductChecksPage extends StatefulWidget {
   @override
@@ -11,7 +11,7 @@ class ProductChecksPage extends StatefulWidget {
 
 class _ProductChecksPageState extends State<ProductChecksPage> {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  Products products;
+  late Products products;
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +24,8 @@ class _ProductChecksPageState extends State<ProductChecksPage> {
               future: collection.get(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) return Container();
-                var document = snapshot?.data;
-                var data = document.docs;
+                QuerySnapshot? document = snapshot.data;
+                var data = document?.docs ?? [];
                 List<Products> datalists = [];
                 for (var detes in data) {
                   datalists.add(Products.fromMap(detes.data()));
@@ -44,7 +44,7 @@ class _ProductChecksPageState extends State<ProductChecksPage> {
                           ),
                         );
                       },
-                      child: ListCards(
+                      child: ListCard(
                         cardsName: datalists[i].name,
                         cardsType: "Products",
                         icons: Icons.shop,
@@ -53,7 +53,7 @@ class _ProductChecksPageState extends State<ProductChecksPage> {
                       ),
                     );
                   },
-                  itemCount: document.docs.length,
+                  itemCount: document!.docs.length,
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                 );
