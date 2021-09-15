@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:new_flutter_mbdimsum/models/customer.dart';
-import 'package:new_flutter_mbdimsum/models/history.dart';
-import 'package:new_flutter_mbdimsum/models/cart.dart';
-import 'package:new_flutter_mbdimsum/models/cart_items.dart';
+import 'package:new_flutter_mbdimsum/models/Customer/customer.dart';
+import 'package:new_flutter_mbdimsum/models/History/history.dart';
+import 'package:new_flutter_mbdimsum/models/Cart/cart.dart';
+import 'package:new_flutter_mbdimsum/models/Cart%20Items/cart_items.dart';
 import 'package:new_flutter_mbdimsum/extensions/cart_extensions.dart';
 
-import 'package:new_flutter_mbdimsum/screens/Order%20Products/order_products_screen.dart';
+import 'package:new_flutter_mbdimsum/screens/Cart/cart_screen.dart';
 
 class CheckOrdersPage extends StatefulWidget {
   @override
@@ -77,7 +77,7 @@ class _CheckOrdersPageState extends State<CheckOrdersPage> {
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) {
-                                  return OrderProductsScreen(
+                                  return CartScreen(
                                     cart: carts[i],
                                   );
                                 },

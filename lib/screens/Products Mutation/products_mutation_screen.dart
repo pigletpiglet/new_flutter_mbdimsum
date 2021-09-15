@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:new_flutter_mbdimsum/models/products.dart';
+import 'package:new_flutter_mbdimsum/models/Products/products.dart';
 import 'package:new_flutter_mbdimsum/screens/Products%20Mutation/products_mutation_page.dart';
 import 'package:new_flutter_mbdimsum/screens/base_screen.dart';
 

@@ -1,4 +1,4 @@
-package com.example.new_flutter_mbdimsum
+package dev.mtsstudio.newmbdimsum
 
 import io.flutter.embedding.android.FlutterActivity
 

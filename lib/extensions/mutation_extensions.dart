@@ -1,4 +1,4 @@
-import 'package:new_flutter_mbdimsum/models/mutation.dart';
+import 'package:new_flutter_mbdimsum/models/Mutation/mutation.dart';
 
 const diff = Duration.millisecondsPerDay * 100;
 

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:new_flutter_mbdimsum/models/products.dart';
+import 'package:new_flutter_mbdimsum/models/Products/products.dart';
 import 'package:new_flutter_mbdimsum/widgets/normal_input.dart';
 
 class AddProductsPage extends StatefulWidget {

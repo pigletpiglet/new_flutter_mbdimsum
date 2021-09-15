@@ -2,11 +2,12 @@ import 'dart:math';
 
 import 'package:intl/intl.dart';
 import 'package:new_flutter_mbdimsum/functions/date_parser.dart';
-import 'package:new_flutter_mbdimsum/models/cart_items.dart';
+import 'package:new_flutter_mbdimsum/models/Cart%20Items/cart_items.dart';
+import 'package:new_flutter_mbdimsum/models/Customer/customer.dart';
 
 class Cart {
+  Customer customer;
   String orderNumber;
-  String customerName;
   String dropPoint;
   String timeStampString;
   String dateString;
@@ -19,7 +20,7 @@ class Cart {
 
   Cart(
       {required this.orderNumber,
-      required this.customerName,
+      required this.customer,
       required this.dropPoint,
       required this.dateTime,
       required this.totalPrice,
@@ -33,7 +34,7 @@ class Cart {
   static Cart fromMap(Map<String, dynamic> data) {
     return Cart(
       orderNumber: data['ordernumber'] ?? "",
-      customerName: data['customername'] ?? "",
+      customer: data['customer'] ?? "",
       dropPoint: data['droppoint'] ?? "",
       dateTime: DateTime.tryParse(data["datetime"]) ?? DateTime.now(),
       totalPrice: data['totalprice'] ?? 0,
@@ -48,7 +49,7 @@ class Cart {
     return Cart(
       buySell: false,
       cartItems: [],
-      customerName: '',
+      customer: Customer.empty(),
       dateTime: DateTime.now(),
       dropPoint: '',
       hasPay: false,
@@ -61,7 +62,7 @@ class Cart {
   Map<String, dynamic> toVariables() {
     return {
       "ordernumber": orderNumber,
-      "customername": customerName,
+      "customer": customer,
       "droppoint": dropPoint,
       "datetime": dateTime.toIso8601String(),
       "totalprice": totalPrice,

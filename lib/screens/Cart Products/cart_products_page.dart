@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:new_flutter_mbdimsum/models/cart_items.dart';
+import 'package:new_flutter_mbdimsum/models/Cart%20Items/cart_items.dart';
 
 class CartProductsPage extends StatefulWidget {
   CartItems products;

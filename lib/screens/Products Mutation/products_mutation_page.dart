@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:new_flutter_mbdimsum/models/mutation.dart';
-import 'package:new_flutter_mbdimsum/models/products.dart';
+import 'package:new_flutter_mbdimsum/models/Mutation/mutation.dart';
+import 'package:new_flutter_mbdimsum/models/Products/products.dart';
 import 'package:new_flutter_mbdimsum/extensions/mutation_extensions.dart';
 
 class ProductMutationPage extends StatefulWidget {

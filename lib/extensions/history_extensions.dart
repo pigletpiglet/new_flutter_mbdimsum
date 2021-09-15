@@ -1,4 +1,4 @@
-import 'package:new_flutter_mbdimsum/models/history.dart';
+import 'package:new_flutter_mbdimsum/models/History/history.dart';
 
 const diff = Duration.millisecondsPerDay * 100;
 
