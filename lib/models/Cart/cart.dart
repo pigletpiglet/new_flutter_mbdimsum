@@ -7,6 +7,7 @@ import 'package:new_flutter_mbdimsum/models/Customer/customer.dart';
 
 class Cart {
   Customer customer;
+  late String id;
   String orderNumber;
   String dropPoint;
   String timeStampString;
@@ -29,7 +30,8 @@ class Cart {
       required this.hasPay,
       required this.buySell})
       : timeStampString = DateFormat("HH:mm").format(dateTime),
-        dateString = DateParser.parseDate(dateTime);
+        dateString = DateParser.parseDate(dateTime),
+        id = getID(orderNumber, dateTime);
 
   static Cart fromMap(Map<String, dynamic> data) {
     return Cart(
@@ -43,6 +45,10 @@ class Cart {
       cartItems: data['orderlists'],
       buySell: data['buysell'] ?? false,
     );
+  }
+
+  bool isEmpty() {
+    return this == Cart.empty();
   }
 
   static Cart empty() {
@@ -61,8 +67,9 @@ class Cart {
 
   Map<String, dynamic> toVariables() {
     return {
+      "id": id,
       "ordernumber": orderNumber,
-      "customer": customer,
+      "customer": customer.toVariables(),
       "droppoint": dropPoint,
       "datetime": dateTime.toIso8601String(),
       "totalprice": totalPrice,
@@ -72,8 +79,15 @@ class Cart {
     };
   }
 
-  static const _chars =
-      'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  static String getID(String str, DateTime time) {
+    return time.day.toString() +
+        time.month.toString() +
+        time.year.toString() +
+        time.hour.toString() +
+        time.minute.toString() +
+        time.second.toString() +
+        str;
+  }
 
   int getTotalPrice() {
     totalPrice = 0;
@@ -82,11 +96,6 @@ class Cart {
     }
     return totalPrice;
   }
-
-  final Random _rnd = Random();
-
-  String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
-      length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
 
   static List<Cart> fromMapList(List<Map<String, dynamic>> data) {
     return data.map((x) => fromMap(x)).toList();
