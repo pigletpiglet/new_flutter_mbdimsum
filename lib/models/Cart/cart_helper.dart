@@ -1,10 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:new_flutter_mbdimsum/basics/base_helper.dart';
 
 import 'cart.dart';
 
-class CartHelper {
-  final instance = FirebaseFirestore.instance;
-  String collectionPath = "Orders";
+class CartHelper extends BaseHelper {
+  @override
+  String route = "Orders";
+
   Future<void> write(Cart cart) async {
     await instance
         .collection(collectionPath)
