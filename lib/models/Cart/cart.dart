@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:new_flutter_mbdimsum/functions/date_parser.dart';
-import 'package:new_flutter_mbdimsum/models/Cart%20Items/cart_items.dart';
+import 'package:new_flutter_mbdimsum/models/cart_items/cart_items.dart';
 import 'package:new_flutter_mbdimsum/models/Customer/customer.dart';
 
 class Cart {
@@ -32,10 +32,11 @@ class Cart {
         id = getID(orderNumber, dateTime);
 
   static Cart fromMap(Map<String, dynamic> data) {
+    var items = CartItems.fromMapList(data['cartitems']);
     return Cart(
       orderNumber: data['ordernumber'] ?? "",
       customer: Customer.fromMap(data['customer']),
-      cartItems: CartItems.fromMapList(data['cartItems'] ?? []),
+      cartItems: items,
       dropPoint: data['droppoint'] ?? "",
       dateTime: DateTime.tryParse(data["datetime"]) ?? DateTime.now(),
       totalPrice: data['totalprice'] ?? 0,
@@ -64,17 +65,14 @@ class Cart {
   }
 
   Map<String, dynamic> toVariables() {
-    List<Map<String, dynamic>> jonson =
-        cartItems.map((e) => e.toVariables()).toList();
-
     return {
       "id": id,
       "ordernumber": orderNumber,
       "customer": customer.toVariables(),
+      "cartitems": cartItems.map((e) => e.toVariables()).toList(),
       "droppoint": dropPoint,
       "datetime": dateTime.toIso8601String(),
       "totalprice": totalPrice,
-      "cartitems": jonson,
       "hassend": hasSend,
       "haspay": hasPay,
       "buysell": buySell

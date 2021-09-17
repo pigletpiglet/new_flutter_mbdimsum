@@ -4,7 +4,6 @@ import 'package:new_flutter_mbdimsum/models/Cart/cart_helper.dart';
 import 'package:new_flutter_mbdimsum/models/Customer/customer.dart';
 import 'package:new_flutter_mbdimsum/models/History/history.dart';
 import 'package:new_flutter_mbdimsum/models/Cart/cart.dart';
-import 'package:new_flutter_mbdimsum/models/Cart%20Items/cart_items.dart';
 import 'package:new_flutter_mbdimsum/extensions/cart_extensions.dart';
 import 'package:new_flutter_mbdimsum/models/History/history_helper.dart';
 
@@ -16,8 +15,6 @@ class CheckOrdersPage extends StatefulWidget {
 }
 
 class _CheckOrdersPageState extends State<CheckOrdersPage> {
-  late List<Cart> carts;
-
   late CartHelper _cartHelper;
   late HistoryHelper _historyHelper;
 
@@ -39,10 +36,11 @@ class _CheckOrdersPageState extends State<CheckOrdersPage> {
         children: [
           Column(
             children: [
-              FutureBuilder<bool>(
-                  future: futureKumpulan(),
+              FutureBuilder<Iterable<Cart>>(
+                  future: _cartHelper.listFuture(),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) return Container();
+                    var carts = snapshot.data?.toList() ?? [];
                     carts.sortByEventDate();
                     return ListView.builder(
                       itemBuilder: (context, i) {
@@ -305,13 +303,5 @@ class _CheckOrdersPageState extends State<CheckOrdersPage> {
         ],
       ),
     );
-  }
-
-  Future<bool> futureKumpulan() async {
-    carts = [];
-
-    var listofcart = await _cartHelper.listFuture();
-    carts = listofcart.toList();
-    return true;
   }
 }

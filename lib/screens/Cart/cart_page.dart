@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:new_flutter_mbdimsum/models/Cart%20Items/cart_helper.dart';
+import 'package:new_flutter_mbdimsum/models/cart_items/cart_helper.dart';
 import 'package:new_flutter_mbdimsum/models/Cart/cart_helper.dart';
 import 'package:new_flutter_mbdimsum/models/Customer/customer.dart';
 import 'package:new_flutter_mbdimsum/models/Cart/cart.dart';
-import 'package:new_flutter_mbdimsum/models/Cart%20Items/cart_items.dart';
+import 'package:new_flutter_mbdimsum/models/cart_items/cart_items.dart';
 import 'package:new_flutter_mbdimsum/screens/add_carts/add_carts_screen.dart';
 import 'package:new_flutter_mbdimsum/screens/cart_products/cart_products_screen.dart';
 import 'package:new_flutter_mbdimsum/widgets/base_form_field.dart';
@@ -30,10 +30,10 @@ class _CartPageState extends State<CartPage> {
   @override
   void initState() {
     widget.cart = widget.cart != null
-        ? Cart.empty()
-        : widget.cart?.isEmpty() ?? false
-            ? widget.cart
-            : Cart.empty();
+        ? widget.cart?.isEmpty() ?? true
+            ? Cart.empty()
+            : widget.cart
+        : Cart.empty();
     super.initState();
   }
 
@@ -152,6 +152,7 @@ class _CartPageState extends State<CartPage> {
                         const Text("Pesanan"),
                         ListView.builder(
                           itemBuilder: (context, i) {
+                            print(widget.cart?.cartItems);
                             return Container(
                               padding: const EdgeInsets.all(6),
                               child: Row(

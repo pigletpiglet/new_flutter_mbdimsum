@@ -1,5 +1,5 @@
 import 'package:new_flutter_mbdimsum/basics/base_helper.dart';
-import 'package:new_flutter_mbdimsum/models/Cart%20Items/cart_items.dart';
+import 'package:new_flutter_mbdimsum/models/cart_items/cart_items.dart';
 import 'package:new_flutter_mbdimsum/models/Products/products.dart';
 
 class CartItemsHelper extends BaseHelper {

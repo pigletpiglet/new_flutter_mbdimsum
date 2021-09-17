@@ -52,7 +52,7 @@ class CartItems {
   String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
       length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
 
-  static List<CartItems> fromMapList(List<Map<String, dynamic>> data) {
-    return data.map((x) => fromMap(x)).toList();
+  static List<CartItems> fromMapList(List<dynamic>? data) {
+    return data?.map((x) => fromMap(x)).toList() ?? [];
   }
 }
