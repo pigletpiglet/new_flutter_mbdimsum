@@ -1,13 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:new_flutter_mbdimsum/models/Cart%20Items/cart_helper.dart';
 import 'package:new_flutter_mbdimsum/models/Cart/cart_helper.dart';
 import 'package:new_flutter_mbdimsum/models/Customer/customer.dart';
 import 'package:new_flutter_mbdimsum/models/Cart/cart.dart';
 import 'package:new_flutter_mbdimsum/models/Cart%20Items/cart_items.dart';
-import 'package:new_flutter_mbdimsum/models/Products/products.dart';
 import 'package:new_flutter_mbdimsum/screens/add_carts/add_carts_screen.dart';
+import 'package:new_flutter_mbdimsum/screens/cart_products/cart_products_screen.dart';
 import 'package:new_flutter_mbdimsum/widgets/base_form_field.dart';
+import 'package:new_flutter_mbdimsum/widgets/list_card.dart';
 import 'package:new_flutter_mbdimsum/widgets/sell_buy_button.dart';
 
 class CartPage extends StatefulWidget {
@@ -32,7 +34,6 @@ class _CartPageState extends State<CartPage> {
         : widget.cart?.isEmpty() ?? false
             ? widget.cart
             : Cart.empty();
-
     super.initState();
   }
 
@@ -61,24 +62,15 @@ class _CartPageState extends State<CartPage> {
                 ),
                 GestureDetector(
                   onTap: () async {
-                    Products orderProductsSementara =
-                        await Navigator.of(context).push(
+                    var content = await Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) {
                           return AddCartsScreen();
                         },
                       ),
                     );
-                    // if (orderProductsSementara != null)
-                    //   listoforderproducts.add(
-                    //     OrderProducts(
-                    //       price: orderProductsSementara.price,
-                    //       productname: orderProductsSementara.name,
-                    //       quantity: 1,
-                    //       productid: orderProductsSementara.productid,
-                    //       stock: orderProductsSementara.stock,
-                    //     ),
-                    //   );
+                    widget.cart?.cartItems
+                        .add(CartItemsHelper().productToCartItems(content));
                     setState(() {});
                   },
                   child: Container(
@@ -136,8 +128,89 @@ class _CartPageState extends State<CartPage> {
                     ),
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.blue,
+                        style: BorderStyle.none,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 2,
+                          blurRadius: 5,
+                          offset:
+                              const Offset(0, 3), // changes position of shadow
+                        ),
+                      ],
+                      color: Colors.white,
+                    ),
+                    child: Column(
+                      children: [
+                        const Text("Pesanan"),
+                        ListView.builder(
+                          itemBuilder: (context, i) {
+                            return Container(
+                              padding: const EdgeInsets.all(6),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: InkWell(
+                                        onTap: () async {
+                                          widget.cart!.cartItems.add(
+                                              await Navigator.of(context)
+                                                  .push(MaterialPageRoute(
+                                            builder: (context) {
+                                              return CartProductsScreen(
+                                                cartItems:
+                                                    widget.cart?.cartItems[i] ??
+                                                        CartItems.empty(),
+                                                buysell: widget.cart?.buySell ??
+                                                    false,
+                                              );
+                                            },
+                                          )));
+
+                                          setState(() {});
+                                        },
+                                        child: ListCard(
+                                          cardsName: widget.cart?.cartItems[i]
+                                                  .itemName ??
+                                              "",
+                                          cardsType: "Products",
+                                          icons: Icons.shopping_bag,
+                                          quantity: widget.cart?.cartItems[i]
+                                                  .quantity ??
+                                              0,
+                                          price:
+                                              widget.cart?.cartItems[i].price ??
+                                                  0,
+                                        )),
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.delete),
+                                    color: Colors.red,
+                                    onPressed: () {
+                                      widget.cart?.cartItems.removeAt(i);
+                                      setState(() {});
+                                    },
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                          itemCount: widget.cart?.cartItems.length ?? 0,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
                 SellBuyButton(
-                  buySell: widget.cart!.buySell,
+                  buySell: widget.cart?.buySell ?? false,
                 ),
                 ElevatedButton(
                     onPressed: () {

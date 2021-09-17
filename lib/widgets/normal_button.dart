@@ -5,12 +5,13 @@ class NormalButton extends StatelessWidget {
   Function()? function;
   Icon? icon;
 
-  NormalButton({this.text, this.function, this.icon});
+  NormalButton({Key? key, this.text, this.function, this.icon})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 6),
+      margin: const EdgeInsets.symmetric(vertical: 6),
       child: ElevatedButton(
         child: SizedBox(
           width: 200,

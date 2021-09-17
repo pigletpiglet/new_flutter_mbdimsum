@@ -1,6 +1,6 @@
 import 'package:new_flutter_mbdimsum/models/Cart/cart.dart';
 
-const Diff = Duration.millisecondsPerDay * 100;
+const diff = Duration.millisecondsPerDay * 100;
 
 extension CartExtensions on List<Cart> {
   void sortByEventDate() {

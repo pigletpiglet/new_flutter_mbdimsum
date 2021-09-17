@@ -35,6 +35,16 @@ class CartItems {
     };
   }
 
+  static CartItems empty() {
+    return CartItems(
+      itemID: '',
+      itemName: '',
+      price: 0,
+      quantity: 0,
+      stock: 0,
+    );
+  }
+
   static const _chars =
       'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
   final Random _rnd = Random();

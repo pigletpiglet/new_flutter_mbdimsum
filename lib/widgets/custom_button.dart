@@ -24,11 +24,11 @@ class CustomButton extends StatelessWidget {
       //   setState(() {});
       // },
       child: Container(
-        margin: EdgeInsets.symmetric(
+        margin: const EdgeInsets.symmetric(
           vertical: 15,
           horizontal: 20,
         ),
-        padding: EdgeInsets.symmetric(
+        padding: const EdgeInsets.symmetric(
           horizontal: 10,
         ),
         decoration: BoxDecoration(
@@ -38,10 +38,10 @@ class CustomButton extends StatelessWidget {
               color: Colors.grey.withOpacity(0.5),
               spreadRadius: 5,
               blurRadius: 7,
-              offset: Offset(0, 3), // changes position of shadow
+              offset: const Offset(0, 3), // changes position of shadow
             ),
           ],
-          borderRadius: BorderRadius.all(Radius.circular(100)),
+          borderRadius: const BorderRadius.all(Radius.circular(100)),
           border: Border.all(
             color: Colors.blue,
             style: BorderStyle.none,
@@ -49,17 +49,15 @@ class CustomButton extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Container(
-              child: Icon(Icons.people),
-            ),
+            const Icon(Icons.people),
             Expanded(
               child: Container(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Customer_dev"),
-                    SizedBox(
+                    const Text("Customer_dev"),
+                    const SizedBox(
                       height: 4,
                     ),
                     Text(text ?? "Masukkan Customer"),

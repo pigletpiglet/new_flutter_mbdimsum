@@ -9,7 +9,8 @@ class CircleButton extends StatefulWidget {
   final double iconSize;
   final EdgeInsetsGeometry padding;
 
-  CircleButton({
+  const CircleButton({
+    Key? key,
     required this.iconData,
     required this.onPressed,
     this.color = Colors.blue,
@@ -17,7 +18,7 @@ class CircleButton extends StatefulWidget {
     this.size = 75.0,
     this.iconSize = 40.0,
     this.padding = const EdgeInsets.all(12),
-  });
+  }) : super(key: key);
 
   @override
   _CircleButtonState createState() => _CircleButtonState();

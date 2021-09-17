@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:intl/intl.dart';
 import 'package:new_flutter_mbdimsum/functions/date_parser.dart';
 import 'package:new_flutter_mbdimsum/models/Cart%20Items/cart_items.dart';
@@ -66,6 +64,9 @@ class Cart {
   }
 
   Map<String, dynamic> toVariables() {
+    List<Map<String, dynamic>> jonson =
+        cartItems.map((e) => e.toVariables()).toList();
+
     return {
       "id": id,
       "ordernumber": orderNumber,
@@ -73,7 +74,7 @@ class Cart {
       "droppoint": dropPoint,
       "datetime": dateTime.toIso8601String(),
       "totalprice": totalPrice,
-      "cartitems": cartItems.map((e) => e.toVariables()),
+      "cartitems": jonson,
       "hassend": hasSend,
       "haspay": hasPay,
       "buysell": buySell

@@ -29,7 +29,6 @@ class MutationHelper extends BaseHelper {
         .update({"stock": FieldValue.increment(quantity)});
   }
 
-  @override
   Mutation mapItem(Map<String, dynamic> map) {
     return Mutation.fromMap(map);
   }
