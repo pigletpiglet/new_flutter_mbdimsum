@@ -27,7 +27,6 @@ class _AddCartsPageState extends State<AddCartsPage> {
           FutureBuilder<Iterable<Products>>(
               future: _productsHelper.listFuture(),
               builder: (context, snapshot) {
-                print(snapshot.data);
                 if (!snapshot.hasData) return Container();
                 var itemList = snapshot.data?.toList() ?? [];
 

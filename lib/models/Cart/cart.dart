@@ -36,13 +36,13 @@ class Cart {
   static Cart fromMap(Map<String, dynamic> data) {
     return Cart(
       orderNumber: data['ordernumber'] ?? "",
-      customer: data['customer'] ?? "",
+      customer: Customer.fromMap(data['customer']),
+      cartItems: CartItems.fromMapList(data['cartItems'] ?? []),
       dropPoint: data['droppoint'] ?? "",
       dateTime: DateTime.tryParse(data["datetime"]) ?? DateTime.now(),
       totalPrice: data['totalprice'] ?? 0,
       hasSend: data['hassend'] ?? false,
       hasPay: data['haspay'] ?? false,
-      cartItems: data['orderlists'],
       buySell: data['buysell'] ?? false,
     );
   }
@@ -73,6 +73,7 @@ class Cart {
       "droppoint": dropPoint,
       "datetime": dateTime.toIso8601String(),
       "totalprice": totalPrice,
+      "cartitems": cartItems.map((e) => e.toVariables()),
       "hassend": hasSend,
       "haspay": hasPay,
       "buysell": buySell

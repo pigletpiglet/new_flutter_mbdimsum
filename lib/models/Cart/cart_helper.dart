@@ -29,4 +29,11 @@ class CartHelper extends BaseHelper {
   Future<void> delete(String id) async {
     await instance.collection(collectionPath).doc(id).delete();
   }
+
+  Future<Iterable<Cart>> listFuture() async {
+    var result = await instance.collection(collectionPath).get();
+
+    if (result.docs.isEmpty) return [];
+    return result.docs.map((e) => Cart.fromMap(e.data()));
+  }
 }

@@ -6,7 +6,7 @@ import 'package:new_flutter_mbdimsum/models/Customer/customer.dart';
 import 'package:new_flutter_mbdimsum/models/Cart/cart.dart';
 import 'package:new_flutter_mbdimsum/models/Cart%20Items/cart_items.dart';
 import 'package:new_flutter_mbdimsum/models/Products/products.dart';
-import 'package:new_flutter_mbdimsum/screens/Add%20Carts/add_carts_screen.dart';
+import 'package:new_flutter_mbdimsum/screens/add_carts/add_carts_screen.dart';
 import 'package:new_flutter_mbdimsum/widgets/base_form_field.dart';
 import 'package:new_flutter_mbdimsum/widgets/sell_buy_button.dart';
 
@@ -29,7 +29,7 @@ class _CartPageState extends State<CartPage> {
   void initState() {
     widget.cart = widget.cart != null
         ? Cart.empty()
-        : widget.cart!.isEmpty()
+        : widget.cart?.isEmpty() ?? false
             ? widget.cart
             : Cart.empty();
 

@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:new_flutter_mbdimsum/models/Cart%20Items/cart_items.dart';
 
 class CartProductsPage extends StatefulWidget {
-  CartItems products;
+  CartItems item;
   bool buysell;
   CartProductsPage({
     Key? key,
-    required this.products,
+    required this.item,
     required this.buysell,
   }) : super(key: key);
 
@@ -60,11 +60,10 @@ class _CartProductsPageState extends State<CartProductsPage> {
                   border: InputBorder.none,
                   enabled: false,
                 ),
-                controller:
-                    TextEditingController(text: widget.products.itemName),
+                controller: TextEditingController(text: widget.item.itemName),
                 readOnly: true,
                 onChanged: (String ans) {
-                  widget.products.itemName = ans;
+                  widget.item.itemName = ans;
                 },
               ),
             ),
@@ -93,15 +92,15 @@ class _CartProductsPageState extends State<CartProductsPage> {
                 ),
               ),
               child: TextFormField(
-                controller: TextEditingController(
-                    text: widget.products.price.toString()),
+                controller:
+                    TextEditingController(text: widget.item.price.toString()),
                 decoration: const InputDecoration(
                   labelText: "Price",
                   hintText: "e.g 10000",
                   border: InputBorder.none,
                 ),
                 onChanged: (String ans) {
-                  widget.products.price = int.parse(ans);
+                  widget.item.price = int.parse(ans);
                 },
               ),
             ),
@@ -131,16 +130,15 @@ class _CartProductsPageState extends State<CartProductsPage> {
               ),
               child: TextFormField(
                 controller: TextEditingController(
-                    text: widget.products.quantity.toString()),
+                    text: widget.item.quantity.toString()),
                 decoration: const InputDecoration(
                   labelText: "Quantity",
                   hintText: "e.g 5",
                   border: InputBorder.none,
                 ),
                 onChanged: (String ans) {
-                  if (widget.buysell ||
-                      widget.products.stock >= int.parse(ans)) {
-                    widget.products.quantity = int.parse(ans);
+                  if (widget.buysell || widget.item.stock >= int.parse(ans)) {
+                    widget.item.quantity = int.parse(ans);
                   } else {
                     showDialog<bool>(
                       context: context,
@@ -173,7 +171,7 @@ class _CartProductsPageState extends State<CartProductsPage> {
             ),
             ElevatedButton(
                 onPressed: () {
-                  Navigator.pop(context, widget.products);
+                  Navigator.pop(context, widget.item);
                 },
                 child: const Text("Save"))
           ],

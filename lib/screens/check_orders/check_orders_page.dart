@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:new_flutter_mbdimsum/models/Cart/cart_helper.dart';
 import 'package:new_flutter_mbdimsum/models/Customer/customer.dart';
 import 'package:new_flutter_mbdimsum/models/History/history.dart';
 import 'package:new_flutter_mbdimsum/models/Cart/cart.dart';
 import 'package:new_flutter_mbdimsum/models/Cart%20Items/cart_items.dart';
 import 'package:new_flutter_mbdimsum/extensions/cart_extensions.dart';
+import 'package:new_flutter_mbdimsum/models/History/history_helper.dart';
 
 import 'package:new_flutter_mbdimsum/screens/Cart/cart_screen.dart';
 
@@ -14,13 +16,15 @@ class CheckOrdersPage extends StatefulWidget {
 }
 
 class _CheckOrdersPageState extends State<CheckOrdersPage> {
-  late FirebaseFirestore firestore;
-  late QuerySnapshot col, subcol;
   late List<Cart> carts;
+
+  late CartHelper _cartHelper;
+  late HistoryHelper _historyHelper;
 
   @override
   void initState() {
-    firestore = FirebaseFirestore.instance;
+    _cartHelper = CartHelper();
+    _historyHelper = HistoryHelper();
     super.initState();
   }
 
@@ -30,8 +34,6 @@ class _CheckOrdersPageState extends State<CheckOrdersPage> {
 
   @override
   Widget build(BuildContext context) {
-    collection = firestore.collection('Orders');
-
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -59,17 +61,14 @@ class _CheckOrdersPageState extends State<CheckOrdersPage> {
                         if (carts[i].hasSend && carts[i].hasPay) {
                           History history = History(
                             buySell: carts[i].buySell,
-                            customerName: carts[i].customerName,
+                            customerName: carts[i].customer.name,
                             dateTime: carts[i].dateTime,
                             dropPoint: carts[i].dropPoint,
                             cartItems: carts[i].cartItems,
                             orderNumber: carts[i].orderNumber,
                             totalPrice: carts[i].totalPrice,
                           );
-                          firestore
-                              .collection("History")
-                              .doc(carts[i].orderNumber)
-                              .set(history.toVariables());
+                          _historyHelper.write(history);
                           return Container();
                         }
                         return GestureDetector(
@@ -114,7 +113,7 @@ class _CheckOrdersPageState extends State<CheckOrdersPage> {
                                               ),
                                             ),
                                             Text(
-                                              carts[i].customerName,
+                                              carts[i].customer.name,
                                               style: const TextStyle(
                                                 fontSize: 18,
                                               ),
@@ -309,20 +308,10 @@ class _CheckOrdersPageState extends State<CheckOrdersPage> {
   }
 
   Future<bool> futureKumpulan() async {
-    col = await collection.get();
     carts = [];
-    for (var detes in col.docs) {
-      var orderss = Cart.fromMap(detes.data());
-      orderss.cartItems = [];
-      subcol = await collection
-          .doc(orderss.orderNumber)
-          .collection("Orderlists")
-          .get();
-      for (var dates in subcol.docs) {
-        orderss.cartItems.add(CartItems.fromMap(dates.data()));
-      }
-      carts.add(orderss);
-    }
+
+    var listofcart = await _cartHelper.listFuture();
+    carts = listofcart.toList();
     return true;
   }
 }

@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:new_flutter_mbdimsum/models/Products/products.dart';
-import 'package:new_flutter_mbdimsum/screens/Products%20Mutation/products_mutation_screen.dart';
+import 'package:new_flutter_mbdimsum/models/Products/products_helper.dart';
+import 'package:new_flutter_mbdimsum/screens/products_mutation/products_mutation_screen.dart';
 import 'package:new_flutter_mbdimsum/widgets/list_card.dart';
 
 class ProductChecksPage extends StatefulWidget {
@@ -10,26 +11,29 @@ class ProductChecksPage extends StatefulWidget {
 }
 
 class _ProductChecksPageState extends State<ProductChecksPage> {
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
   late Products products;
+
+  late ProductsHelper _productsHelper;
+
+  @override
+  void initState() {
+    _productsHelper = ProductsHelper();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference collection = firestore.collection('Products');
-
     return SingleChildScrollView(
       child: Column(
         children: [
-          FutureBuilder<QuerySnapshot>(
-              future: collection.get(),
+          FutureBuilder<Iterable<Products>>(
+              future: _productsHelper.listFuture(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) return Container();
-                QuerySnapshot? document = snapshot.data;
-                var data = document?.docs ?? [];
-                List<Products> datalists = [];
-                for (var detes in data) {
-                  datalists.add(Products.fromMap(detes.data()));
-                }
+                var itemList = snapshot.data?.toList() ?? [];
+                itemList.sort((a, b) {
+                  return a.name.toLowerCase().compareTo(b.name.toLowerCase());
+                });
                 return ListView.builder(
                   itemBuilder: (context, i) {
                     return GestureDetector(
@@ -38,22 +42,22 @@ class _ProductChecksPageState extends State<ProductChecksPage> {
                           MaterialPageRoute(
                             builder: (context) {
                               return ProductMutationScreen(
-                                products: datalists[i],
+                                products: itemList[i],
                               );
                             },
                           ),
                         );
                       },
                       child: ListCard(
-                        cardsName: datalists[i].name,
+                        cardsName: itemList[i].name,
                         cardsType: "Products",
                         icons: Icons.shop,
-                        price: datalists[i].price,
-                        quantity: datalists[i].stock,
+                        price: itemList[i].price,
+                        quantity: itemList[i].stock,
                       ),
                     );
                   },
-                  itemCount: document!.docs.length,
+                  itemCount: itemList.length,
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                 );

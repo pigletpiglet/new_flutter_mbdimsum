@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:new_flutter_mbdimsum/models/Customer/customer.dart';
+import 'package:new_flutter_mbdimsum/models/Customer/customer_helper.dart';
 
 class CustomersPage extends StatefulWidget {
   @override
@@ -8,13 +9,11 @@ class CustomersPage extends StatefulWidget {
 }
 
 class _CustomersPageState extends State<CustomersPage> {
-  late FirebaseFirestore firestore;
-  late CollectionReference collection;
+  late CustomerHelper _customerHelper;
 
   @override
   void initState() {
-    firestore = FirebaseFirestore.instance;
-    collection = firestore.collection('Customers');
+    _customerHelper = CustomerHelper();
     super.initState();
   }
 
@@ -23,17 +22,12 @@ class _CustomersPageState extends State<CustomersPage> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          FutureBuilder<QuerySnapshot>(
-              future: collection.get(),
+          FutureBuilder<Iterable<Customer>>(
+              future: _customerHelper.listFuture(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) return Container();
-                var document = snapshot.data;
-                var data = document!.docs;
-                List<Customer> datalists = [];
-                for (var detes in data) {
-                  datalists.add(Customer.fromMap(detes.data()));
-                }
-                datalists.sort((a, b) {
+                var itemList = snapshot.data?.toList() ?? [];
+                itemList.sort((a, b) {
                   return a.name.toLowerCase().compareTo(b.name.toLowerCase());
                 });
 
@@ -42,7 +36,7 @@ class _CustomersPageState extends State<CustomersPage> {
                     return Column(children: [
                       InkWell(
                         onTap: () {
-                          Navigator.pop(context, datalists[i]);
+                          Navigator.pop(context, itemList[i]);
                         },
                         child: Container(
                           margin: const EdgeInsets.symmetric(
@@ -62,7 +56,7 @@ class _CustomersPageState extends State<CustomersPage> {
                           child: IgnorePointer(
                             child: TextFormField(
                               controller: TextEditingController(
-                                text: datalists[i].name,
+                                text: itemList[i].name,
                               ),
                               readOnly: true,
                               decoration: const InputDecoration(
@@ -79,7 +73,7 @@ class _CustomersPageState extends State<CustomersPage> {
                       ),
                     ]);
                   },
-                  itemCount: document.docs.length,
+                  itemCount: itemList.length,
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                 );
