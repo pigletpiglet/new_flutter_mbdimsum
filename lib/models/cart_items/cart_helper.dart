@@ -6,12 +6,14 @@ class CartItemsHelper extends BaseHelper {
   @override
   String route = "Orders";
 
-  CartItems productToCartItems(Products products) {
-    return CartItems(
-        itemName: products.name,
-        itemID: products.productId,
-        price: products.price,
-        quantity: 0,
-        stock: products.stock);
+  CartItems? productToCartItems(Products? products) {
+    return products != null
+        ? CartItems(
+            itemName: products.name,
+            itemID: products.productId,
+            price: products.price,
+            quantity: 0,
+            stock: products.stock)
+        : null;
   }
 }

@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:new_flutter_mbdimsum/screens/Cart/cart_screen.dart';
+import 'package:new_flutter_mbdimsum/screens/products_check/products_check_screen.dart';
 import 'package:new_flutter_mbdimsum/widgets/bigiconbutton.dart';
 
+import 'add_customers/add_customers_screen.dart';
+import 'add_products/add_products_screen.dart';
 import 'check_orders/check_orders_screen.dart';
-
-// import 'Add Customers/add_customers_screen.dart';
-// import 'Add Products/add_products_screen.dart';
-// import 'Check Orders/check_orders_screen.dart';
-// import 'Products Check/products_check_screen.dart';
 
 class HomePage extends StatelessWidget {
   String title;
@@ -71,54 +69,54 @@ class HomePage extends StatelessWidget {
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 ),
-                // Row(
-                //   children: [
-                //     BigIconButton(
-                //       color: Colors.yellow[800]!,
-                //       function: () {
-                //         Navigator.of(context).push(
-                //           MaterialPageRoute(
-                //             builder: (context) {
-                //               return AddCartsScreen();
-                //             },
-                //           ),
-                //         );
-                //       },
-                //       iconData: Icons.add_circle,
-                //       label: "Tambah \n Produk Baru",
-                //     ),
-                //     BigIconButton(
-                //       color: Colors.red[400]!,
-                //       function: () {
-                //         Navigator.of(context)
-                //             .push(MaterialPageRoute(builder: (context) {
-                //           return ProductCheckScreen();
-                //         }));
-                //       },
-                //       iconData: Icons.repeat,
-                //       label: "Cek Stock",
-                //     ),
-                //   ],
-                //   mainAxisSize: MainAxisSize.max,
-                //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                // ),
-                // Row(
-                //   children: [
-                //     BigIconButton(
-                //       color: Colors.deepPurple,
-                //       function: () {
-                //         Navigator.of(context)
-                //             .push(MaterialPageRoute(builder: (context) {
-                //           return AddCustomersScreen();
-                //         }));
-                //       },
-                //       iconData: Icons.group_add,
-                //       label: "Tambah Customer",
-                //     ),
-                //   ],
-                //   mainAxisSize: MainAxisSize.max,
-                //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                // )
+                Row(
+                  children: [
+                    BigIconButton(
+                      color: Colors.yellow[800]!,
+                      function: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return AddProductsScreen();
+                            },
+                          ),
+                        );
+                      },
+                      iconData: Icons.add_circle,
+                      label: "Tambah \n Produk Baru",
+                    ),
+                    BigIconButton(
+                      color: Colors.red[400]!,
+                      function: () {
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) {
+                          return ProductCheckScreen();
+                        }));
+                      },
+                      iconData: Icons.repeat,
+                      label: "Cek Stock",
+                    ),
+                  ],
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                ),
+                Row(
+                  children: [
+                    BigIconButton(
+                      color: Colors.deepPurple,
+                      function: () {
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) {
+                          return AddCustomersScreen();
+                        }));
+                      },
+                      iconData: Icons.group_add,
+                      label: "Tambah Customer",
+                    ),
+                  ],
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                )
               ],
             ),
           ),

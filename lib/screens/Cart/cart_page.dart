@@ -69,8 +69,8 @@ class _CartPageState extends State<CartPage> {
                         },
                       ),
                     );
-                    widget.cart?.cartItems
-                        .add(CartItemsHelper().productToCartItems(content));
+                    var product = CartItemsHelper().productToCartItems(content);
+                    if (product != null) widget.cart?.cartItems.add(product);
                     setState(() {});
                   },
                   child: Container(

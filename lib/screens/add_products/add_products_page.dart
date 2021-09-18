@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:new_flutter_mbdimsum/models/Products/products.dart';
+import 'package:new_flutter_mbdimsum/models/Products/products_helper.dart';
 import 'package:new_flutter_mbdimsum/widgets/normal_input.dart';
 
 class AddProductsPage extends StatefulWidget {
@@ -10,10 +11,10 @@ class AddProductsPage extends StatefulWidget {
 
 class _AddProductsPageState extends State<AddProductsPage> {
   late Products products;
-  late FirebaseFirestore firestore;
+  late ProductsHelper _productsHelper;
   @override
   void initState() {
-    firestore = FirebaseFirestore.instance;
+    _productsHelper = ProductsHelper();
     products = Products.empty();
     super.initState();
   }
@@ -60,11 +61,7 @@ class _AddProductsPageState extends State<AddProductsPage> {
                 child: const Text("Save"),
                 onPressed: () async {
                   products.productId = products.getRandomString(8);
-                  CollectionReference collectionReference =
-                      firestore.collection("Products");
-                  collectionReference
-                      .doc(products.productId)
-                      .set(products.toVariables());
+                  _productsHelper.write(products);
                   Navigator.pop(context);
                 },
               ),

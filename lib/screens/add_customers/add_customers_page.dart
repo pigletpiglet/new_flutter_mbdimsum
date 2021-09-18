@@ -1,6 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:new_flutter_mbdimsum/models/Customer/customer.dart';
+import 'package:new_flutter_mbdimsum/models/Customer/customer_helper.dart';
 import 'package:new_flutter_mbdimsum/widgets/normal_input.dart';
 
 class AddCustomersPage extends StatefulWidget {
@@ -10,11 +10,11 @@ class AddCustomersPage extends StatefulWidget {
 
 class _AddCustomersPageState extends State<AddCustomersPage> {
   late Customer customer;
-  late FirebaseFirestore firestore;
+  late CustomerHelper _customerHelper;
   @override
   void initState() {
-    firestore = FirebaseFirestore.instance;
     customer = Customer.empty();
+    _customerHelper = CustomerHelper();
     super.initState();
   }
 
@@ -52,9 +52,9 @@ class _AddCustomersPageState extends State<AddCustomersPage> {
               child: ElevatedButton(
                 child: const Text("Save"),
                 onPressed: () async {
-                  CollectionReference collectionReference =
-                      firestore.collection("Customers");
-                  collectionReference.doc().set(customer.toVariables());
+                  customer.id = customer.getRandomString(8);
+                  _customerHelper.write(customer);
+
                   Navigator.pop(context);
                 },
               ),

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 class Customer {
   String name;
   String address;
@@ -30,4 +32,11 @@ class Customer {
   static List<Customer> fromMapList(List<Map<String, dynamic>> data) {
     return data.map((x) => fromMap(x)).toList();
   }
+
+  static const _chars =
+      'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  final Random _rnd = Random();
+
+  String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
+      length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
 }

@@ -3,10 +3,13 @@ import 'package:new_flutter_mbdimsum/models/Customer/customer.dart';
 
 class CustomerHelper extends BaseHelper {
   @override
-  String route = "Customer";
+  String route = "Customers";
 
   Future<void> write(Customer customer) async {
-    await instance.collection(collectionPath).doc().set(customer.toVariables());
+    await instance
+        .collection(collectionPath)
+        .doc(customer.id)
+        .set(customer.toVariables());
   }
 
   Customer mapItem(Map<String, dynamic> map) {
