@@ -1,14 +1,20 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:new_flutter_mbdimsum/models/cart_items/cart_helper.dart';
+import 'package:new_flutter_mbdimsum/models/Mutation/mutation_helper.dart';
+import 'package:new_flutter_mbdimsum/models/Products/products_helper.dart';
+import 'package:new_flutter_mbdimsum/models/cart_items/cart_items_helper.dart';
 import 'package:new_flutter_mbdimsum/models/Cart/cart_helper.dart';
 import 'package:new_flutter_mbdimsum/models/Customer/customer.dart';
 import 'package:new_flutter_mbdimsum/models/Cart/cart.dart';
 import 'package:new_flutter_mbdimsum/models/cart_items/cart_items.dart';
 import 'package:new_flutter_mbdimsum/screens/add_carts/add_carts_screen.dart';
 import 'package:new_flutter_mbdimsum/screens/cart_products/cart_products_screen.dart';
+import 'package:new_flutter_mbdimsum/screens/customers/customers_screen.dart';
 import 'package:new_flutter_mbdimsum/widgets/base_form_field.dart';
+import 'package:new_flutter_mbdimsum/widgets/custom_button.dart';
 import 'package:new_flutter_mbdimsum/widgets/list_card.dart';
 import 'package:new_flutter_mbdimsum/widgets/sell_buy_button.dart';
 
@@ -21,10 +27,11 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   final CartHelper _cartHelper = CartHelper();
+  final MutationHelper _mutationHelper = MutationHelper();
+  final ProductsHelper _productsHelper = ProductsHelper();
 
   late FirebaseFirestore firestore;
   late List<CartItems> cartItems;
-  late Customer customer;
   late Cart pesanan;
 
   @override
@@ -49,12 +56,29 @@ class _CartPageState extends State<CartPage> {
             ),
             child: Column(
               children: [
+                CustomButton(
+                  function: () async {
+                    widget.cart!.customer = await Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return CustomersScreen();
+                        },
+                      ),
+                    );
+
+                    setState(() {});
+                  },
+                  text: widget.cart!.customer.name.isNotEmpty
+                      ? widget.cart!.customer.name
+                      : null,
+                ),
                 Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: BaseFormField(
                     keyboardType: TextInputType.name,
                     obscureText: false,
                     icon: Icons.map,
+                    text: widget.cart?.customer.address ?? "",
                     hintText: "Address",
                     labelText: "Alamat",
                     onChanged: (val) => widget.cart!.dropPoint = val,
@@ -152,7 +176,6 @@ class _CartPageState extends State<CartPage> {
                         const Text("Pesanan"),
                         ListView.builder(
                           itemBuilder: (context, i) {
-                            print(widget.cart?.cartItems);
                             return Container(
                               padding: const EdgeInsets.all(6),
                               child: Row(
@@ -195,6 +218,22 @@ class _CartPageState extends State<CartPage> {
                                     color: Colors.red,
                                     onPressed: () {
                                       widget.cart?.cartItems.removeAt(i);
+                                      try {
+                                        var quantity = widget
+                                                .cart?.cartItems[i].quantity ??
+                                            0;
+                                        _mutationHelper.delete(
+                                            widget.cart!.orderNumber,
+                                            widget.cart?.cartItems[i].itemID ??
+                                                "");
+                                        _productsHelper.changeStock(
+                                            widget.cart?.cartItems[i].itemID ??
+                                                "",
+                                            widget.cart!.buySell
+                                                ? quantity
+                                                : -quantity);
+                                        // ignore: empty_catches
+                                      } catch (exception) {}
                                       setState(() {});
                                     },
                                   ),
@@ -216,6 +255,8 @@ class _CartPageState extends State<CartPage> {
                 ElevatedButton(
                     onPressed: () {
                       _cartHelper.write(widget.cart!);
+                      _mutationHelper.writeList(
+                          widget.cart!.cartItems, widget.cart ?? Cart.empty());
                       Navigator.pop(context);
                     },
                     child: const Text("Save"))

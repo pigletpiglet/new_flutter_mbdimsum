@@ -55,6 +55,7 @@ class BaseFormField extends StatelessWidget {
       ),
       readOnly: readOnly ?? false,
       obscureText: obscureText ?? false,
+      controller: controller,
     );
   }
 }

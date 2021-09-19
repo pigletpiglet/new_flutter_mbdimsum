@@ -14,7 +14,6 @@ class ProductMutationPage extends StatefulWidget {
 class _ProductMutationPageState extends State<ProductMutationPage> {
   @override
   Widget build(BuildContext context) {
-    widget.mutationHelper.productID = widget.products.productId;
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -29,7 +28,7 @@ class _ProductMutationPageState extends State<ProductMutationPage> {
             ),
           ),
           FutureBuilder<List<Mutation>>(
-              // future: widget.mutationHelper.list(),
+              // future: widget.mutationHelper.list()
               builder: (context, snapshot) {
             if (!snapshot.hasData) return Container();
             var datalist = snapshot.data;

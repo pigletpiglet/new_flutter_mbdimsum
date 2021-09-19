@@ -1,30 +1,48 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:new_flutter_mbdimsum/basics/base_helper.dart';
+import 'package:new_flutter_mbdimsum/models/Cart/cart.dart';
 import 'package:new_flutter_mbdimsum/models/Mutation/mutation.dart';
+import 'package:new_flutter_mbdimsum/models/cart_items/cart_items.dart';
 
 class MutationHelper extends BaseHelper {
-  late String? productID;
-  MutationHelper({this.productID});
-
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   @override
   String route = "Mutasi";
 
-  String get fullCollectionName =>
-      "Products" + (BaseHelper.production ? "_dev" : "");
-  CollectionReference get collection =>
-      firestore.collection(fullCollectionName).doc(productID).collection(route);
-
-  Future<void> create(Mutation mutation) async {
-    await collection.doc(mutation.orderNumber).set(mutation.toVariables());
+  Future<void> write(String itemID, Mutation mutation) async {
+    await instance
+        .collection(collectionPath)
+        .doc(itemID)
+        .collection("Mutasi")
+        .doc(mutation.orderNumber)
+        .set(mutation.toVariables());
   }
 
-  Future<void> delete(String orderNumber) async {
-    await collection.doc(orderNumber).delete();
+  Future<void> writeList(List<CartItems> cartItems, Cart cart) async {
+    for (var e in cartItems) {
+      write(
+        e.itemID,
+        Mutation(
+          orderNumber: cart.id,
+          quantity: e.quantity,
+          stock: e.stock,
+          dateTime: cart.dateTime,
+          buySell: cart.buySell,
+          total: e.price * e.quantity,
+          customerName: cart.customer.name,
+          price: e.price,
+        ),
+      );
+    }
+  }
+
+  Future<void> delete(String orderNumber, String itemID) async {
+    await instance.collection(collectionPath).doc(orderNumber).delete();
   }
 
   Future<void> changeStock(String orderNumber, int quantity) async {
-    await collection
+    await instance
+        .collection(collectionPath)
         .doc(orderNumber)
         .update({"stock": FieldValue.increment(quantity)});
   }
