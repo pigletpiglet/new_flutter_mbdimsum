@@ -64,7 +64,7 @@ class _CheckOrdersPageState extends State<CheckOrdersPage> {
                             dropPoint: carts[i].dropPoint,
                             cartItems: carts[i].cartItems,
                             orderNumber: carts[i].orderNumber,
-                            totalPrice: carts[i].totalPrice,
+                            // totalPrice: carts[i].totalPrice,
                           );
                           _historyHelper.write(history);
                           return Container();
@@ -278,14 +278,14 @@ class _CheckOrdersPageState extends State<CheckOrdersPage> {
                                         },
                                       ),
                                     ),
-                                    Expanded(
-                                      child: Column(
-                                        children: [
-                                          const Text("Price"),
-                                          Text(carts[i].totalPrice.toString()),
-                                        ],
-                                      ),
-                                    ),
+                                    // Expanded(
+                                    //   child: Column(
+                                    //     children: [
+                                    //       const Text("Price"),
+                                    //       Text(carts[i].totalPrice.toString()),
+                                    //     ],
+                                    //   ),
+                                    // ),
                                   ],
                                 )
                               ],

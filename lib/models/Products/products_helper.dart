@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:new_flutter_mbdimsum/basics/base_helper.dart';
+import 'package:new_flutter_mbdimsum/models/Mutation/mutation_helper.dart';
 
 import 'products.dart';
 
@@ -18,7 +19,7 @@ class ProductsHelper extends BaseHelper {
     await instance
         .collection(collectionPath)
         .doc(productsID)
-        .update({"stock": FieldValue.increment(-quantity)});
+        .update({"stock": FieldValue.increment(quantity)});
   }
 
   Future<void> update(Products products) async {

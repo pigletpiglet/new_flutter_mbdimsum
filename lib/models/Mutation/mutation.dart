@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:new_flutter_mbdimsum/functions/date_parser.dart';
 import 'package:intl/intl.dart';
+import 'package:new_flutter_mbdimsum/models/Mutation/mutation_helper.dart';
 
 class Mutation {
   String orderNumber;
@@ -15,6 +16,9 @@ class Mutation {
   int stock;
   bool buySell;
 
+  late String? before;
+  late String? after;
+
   Mutation({
     required this.orderNumber,
     required this.quantity,
@@ -24,6 +28,8 @@ class Mutation {
     required this.total,
     required this.customerName,
     required this.price,
+    this.before,
+    this.after,
   })  : timeStampString = DateFormat("HH:mm").format(dateTime),
         dateString = DateParser.parseDate(dateTime);
 
@@ -33,6 +39,8 @@ class Mutation {
       dateTime: DateTime.tryParse(data["datetime"]) ?? DateTime.now(),
       quantity: data['quantity'] ?? 0,
       total: data['total'] ?? 0,
+      after: data['after'] ?? "",
+      before: data['before'] ?? "",
       buySell: data['buysell'] ?? false,
       customerName: data['customername'] ?? "",
       price: data['price'] ?? 0,
@@ -60,6 +68,8 @@ class Mutation {
       "quantity": quantity,
       "buysell": buySell,
       "total": total,
+      "before": before,
+      "after": after,
       "customername": customerName,
       "price": price,
       "stock": stock,

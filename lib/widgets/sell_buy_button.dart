@@ -16,8 +16,7 @@ class _SellBuyButtonState extends State<SellBuyButton> {
     return Builder(builder: (context) {
       return InkWell(
         onTap: () {
-          widget.buySell = !widget.buySell!;
-          setState(() {});
+          widget.onTap!();
         },
         child: Container(
           decoration: BoxDecoration(

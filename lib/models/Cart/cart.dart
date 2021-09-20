@@ -11,7 +11,7 @@ class Cart {
   String timeStampString;
   String dateString;
   DateTime dateTime;
-  int totalPrice;
+  // int totalPrice;
   List<CartItems> cartItems;
   bool hasSend;
   bool hasPay;
@@ -22,14 +22,19 @@ class Cart {
       required this.customer,
       required this.dropPoint,
       required this.dateTime,
-      required this.totalPrice,
+      // required this.totalPrice,
       required this.cartItems,
       required this.hasSend,
       required this.hasPay,
       required this.buySell})
       : timeStampString = DateFormat("HH:mm").format(dateTime),
         dateString = DateParser.parseDate(dateTime),
-        id = getID(orderNumber, dateTime);
+        id = orderNumber.isNotEmpty
+            ? orderNumber
+            : getID(
+                orderNumber,
+                dateTime,
+              );
 
   static Cart fromMap(Map<String, dynamic> data) {
     var items = CartItems.fromMapList(data['cartitems']);
@@ -39,7 +44,7 @@ class Cart {
       cartItems: items,
       dropPoint: data['droppoint'] ?? "",
       dateTime: DateTime.tryParse(data["datetime"]) ?? DateTime.now(),
-      totalPrice: data['totalprice'] ?? 0,
+      // totalPrice: data['totalprice'] ?? 0,
       hasSend: data['hassend'] ?? false,
       hasPay: data['haspay'] ?? false,
       buySell: data['buysell'] ?? false,
@@ -51,7 +56,7 @@ class Cart {
   }
 
   static Cart empty() {
-    return Cart(
+    Cart x = Cart(
       buySell: false,
       cartItems: [],
       customer: Customer.empty(),
@@ -60,8 +65,10 @@ class Cart {
       hasPay: false,
       hasSend: false,
       orderNumber: '',
-      totalPrice: 0,
+      // totalPrice: 0,
     );
+    x.orderNumber = x.id;
+    return x;
   }
 
   Map<String, dynamic> toVariables() {
@@ -72,7 +79,7 @@ class Cart {
       "cartitems": cartItems.map((e) => e.toVariables()).toList(),
       "droppoint": dropPoint,
       "datetime": dateTime.toIso8601String(),
-      "totalprice": totalPrice,
+      // "totalprice": totalPrice,
       "hassend": hasSend,
       "haspay": hasPay,
       "buysell": buySell
@@ -89,13 +96,13 @@ class Cart {
         str;
   }
 
-  int getTotalPrice() {
-    totalPrice = 0;
-    for (var x in cartItems) {
-      totalPrice += (x.price * x.quantity);
-    }
-    return totalPrice;
-  }
+  // int getTotalPrice() {
+  //   totalPrice = 0;
+  //   for (var x in cartItems) {
+  //     totalPrice += (x.price * x.quantity);
+  //   }
+  //   return totalPrice;
+  // }
 
   static List<Cart> fromMapList(List<Map<String, dynamic>> data) {
     return data.map((x) => fromMap(x)).toList();

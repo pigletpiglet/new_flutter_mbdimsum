@@ -35,7 +35,7 @@ class _ProductChecksPageState extends State<ProductChecksPage> {
                 });
                 return ListView.builder(
                   itemBuilder: (context, i) {
-                    return GestureDetector(
+                    return InkWell(
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
@@ -47,12 +47,18 @@ class _ProductChecksPageState extends State<ProductChecksPage> {
                           ),
                         );
                       },
-                      child: ListCard(
-                        cardsName: itemList[i].name,
-                        cardsType: "Products",
-                        icons: Icons.shop,
-                        price: itemList[i].price,
-                        quantity: itemList[i].stock,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0,
+                          vertical: 10.0,
+                        ),
+                        child: ListCard(
+                          cardsName: itemList[i].name,
+                          cardsType: "Products",
+                          icons: Icons.shop,
+                          price: itemList[i].price,
+                          quantity: itemList[i].stock,
+                        ),
                       ),
                     );
                   },

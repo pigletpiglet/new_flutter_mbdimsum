@@ -11,7 +11,7 @@ class History {
   String timeStampString;
   String dateString;
   DateTime dateTime;
-  int totalPrice;
+  // int totalPrice;
   List<CartItems> cartItems;
   bool buySell;
 
@@ -20,7 +20,7 @@ class History {
     required this.customerName,
     required this.dropPoint,
     required this.dateTime,
-    required this.totalPrice,
+    // required this.totalPrice,
     required this.cartItems,
     required this.buySell,
   })  : timeStampString = DateFormat("HH:mm").format(dateTime),
@@ -32,7 +32,7 @@ class History {
       customerName: data['customername'] ?? "",
       dropPoint: data['droppoint'] ?? "",
       dateTime: DateTime.tryParse(data["datetime"]) ?? DateTime.now(),
-      totalPrice: data['totalprice'] ?? 0,
+      // totalPrice: data['totalprice'] ?? 0,
       cartItems: data['orderlists'],
       buySell: data['buysell'] ?? false,
     );
@@ -44,7 +44,7 @@ class History {
       "customername": customerName,
       "droppoint": dropPoint,
       "datetime": dateTime.toIso8601String(),
-      "totalprice": totalPrice,
+      // "totalprice": totalPrice,
       "buysell": buySell
     };
   }
@@ -52,13 +52,13 @@ class History {
   static const _chars =
       'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
 
-  int getTotalPrice() {
-    totalPrice = 0;
-    for (var x in cartItems) {
-      totalPrice += (x.price * x.quantity);
-    }
-    return totalPrice;
-  }
+  // int getTotalPrice() {
+  //   totalPrice = 0;
+  //   for (var x in cartItems) {
+  //     totalPrice += (x.price * x.quantity);
+  //   }
+  //   return totalPrice;
+  // }
 
   final Random _rnd = Random();
 

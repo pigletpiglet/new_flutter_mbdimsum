@@ -213,14 +213,14 @@ class OrderList extends StatelessWidget {
                     },
                   ),
                 ),
-                Expanded(
-                  child: Column(
-                    children: [
-                      Text("Price"),
-                      Text(currencyFormat.format(cart?.totalPrice ?? 0)),
-                    ],
-                  ),
-                ),
+                // Expanded(
+                //   child: Column(
+                //     children: [
+                //       Text("Price"),
+                //       Text(currencyFormat.format(cart?.totalPrice ?? 0)),
+                //     ],
+                //   ),
+                // ),
               ],
             )
           ],

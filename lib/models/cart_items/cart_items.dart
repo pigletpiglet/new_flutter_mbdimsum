@@ -5,6 +5,7 @@ class CartItems {
   String itemID;
   int price;
   int quantity;
+  int? prevQuantity;
   int stock;
 
   CartItems({
@@ -13,7 +14,8 @@ class CartItems {
     required this.price,
     required this.quantity,
     required this.stock,
-  });
+  }) : prevQuantity = quantity;
+
   static CartItems fromMap(Map<String, dynamic> data) {
     return CartItems(
       itemName: data['productname'] ?? "",

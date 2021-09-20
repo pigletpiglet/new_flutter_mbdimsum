@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +5,6 @@ import 'package:new_flutter_mbdimsum/models/Mutation/mutation_helper.dart';
 import 'package:new_flutter_mbdimsum/models/Products/products_helper.dart';
 import 'package:new_flutter_mbdimsum/models/cart_items/cart_items_helper.dart';
 import 'package:new_flutter_mbdimsum/models/Cart/cart_helper.dart';
-import 'package:new_flutter_mbdimsum/models/Customer/customer.dart';
 import 'package:new_flutter_mbdimsum/models/Cart/cart.dart';
 import 'package:new_flutter_mbdimsum/models/cart_items/cart_items.dart';
 import 'package:new_flutter_mbdimsum/screens/add_carts/add_carts_screen.dart';
@@ -31,11 +28,13 @@ class _CartPageState extends State<CartPage> {
   final ProductsHelper _productsHelper = ProductsHelper();
 
   late FirebaseFirestore firestore;
-  late List<CartItems> cartItems;
   late Cart pesanan;
+
+  late List<CartItems> delete;
 
   @override
   void initState() {
+    delete = [];
     widget.cart = widget.cart != null
         ? widget.cart?.isEmpty() ?? true
             ? Cart.empty()
@@ -183,19 +182,21 @@ class _CartPageState extends State<CartPage> {
                                   Expanded(
                                     child: InkWell(
                                         onTap: () async {
-                                          widget.cart!.cartItems.add(
-                                              await Navigator.of(context)
-                                                  .push(MaterialPageRoute(
-                                            builder: (context) {
-                                              return CartProductsScreen(
-                                                cartItems:
-                                                    widget.cart?.cartItems[i] ??
-                                                        CartItems.empty(),
-                                                buysell: widget.cart?.buySell ??
-                                                    false,
-                                              );
-                                            },
-                                          )));
+                                          widget.cart!.cartItems[i] =
+                                              (await Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) {
+                                                return CartProductsScreen(
+                                                  cartItems: widget
+                                                          .cart?.cartItems[i] ??
+                                                      CartItems.empty(),
+                                                  buysell:
+                                                      widget.cart?.buySell ??
+                                                          false,
+                                                );
+                                              },
+                                            ),
+                                          ));
 
                                           setState(() {});
                                         },
@@ -217,23 +218,8 @@ class _CartPageState extends State<CartPage> {
                                     icon: const Icon(Icons.delete),
                                     color: Colors.red,
                                     onPressed: () {
+                                      delete.add(widget.cart!.cartItems[i]);
                                       widget.cart?.cartItems.removeAt(i);
-                                      try {
-                                        var quantity = widget
-                                                .cart?.cartItems[i].quantity ??
-                                            0;
-                                        _mutationHelper.delete(
-                                            widget.cart!.orderNumber,
-                                            widget.cart?.cartItems[i].itemID ??
-                                                "");
-                                        _productsHelper.changeStock(
-                                            widget.cart?.cartItems[i].itemID ??
-                                                "",
-                                            widget.cart!.buySell
-                                                ? quantity
-                                                : -quantity);
-                                        // ignore: empty_catches
-                                      } catch (exception) {}
                                       setState(() {});
                                     },
                                   ),
@@ -251,9 +237,22 @@ class _CartPageState extends State<CartPage> {
                 ),
                 SellBuyButton(
                   buySell: widget.cart?.buySell ?? false,
+                  onTap: () {
+                    widget.cart?.buySell = !widget.cart!.buySell;
+                    setState(() {});
+                  },
                 ),
                 ElevatedButton(
                     onPressed: () {
+                      if (delete.isNotEmpty) {
+                        for (var element in delete) {
+                          var quantity = element.quantity;
+                          _mutationHelper.delete(
+                              widget.cart!.orderNumber, element.itemID);
+                          _productsHelper.changeStock(element.itemID,
+                              (widget.cart!.buySell ? -quantity : (quantity)));
+                        }
+                      }
                       _cartHelper.write(widget.cart!);
                       _mutationHelper.writeList(
                           widget.cart!.cartItems, widget.cart ?? Cart.empty());
