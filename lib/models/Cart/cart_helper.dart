@@ -1,4 +1,5 @@
 import 'package:new_flutter_mbdimsum/basics/base_helper.dart';
+import 'package:new_flutter_mbdimsum/models/Mutation/mutation.dart';
 import 'package:new_flutter_mbdimsum/models/Mutation/mutation_helper.dart';
 import 'package:new_flutter_mbdimsum/models/Products/products_helper.dart';
 
@@ -9,24 +10,18 @@ class CartHelper extends BaseHelper {
   String route = "Orders";
   final ProductsHelper _productsHelper = ProductsHelper();
   final MutationHelper _mutationHelper = MutationHelper();
+
   Future<void> write(Cart cart) async {
     for (var e in cart.cartItems) {
+      Mutation? before =
+          await _mutationHelper.getBefore(cart.orderNumber, e.itemID);
+
       if (cart.buySell) {
         _productsHelper.changeStock(
             e.itemID, e.quantity - (e.prevQuantity ?? 0));
-        _mutationHelper.changeBeforeStock(
-            e.itemID,
-            (await _mutationHelper.getBefore(cart.orderNumber, e.itemID))!
-                .orderNumber,
-            e.quantity - (e.prevQuantity ?? 0));
       } else {
         _productsHelper.changeStock(
             e.itemID, -(e.quantity - (e.prevQuantity ?? 0)));
-        _mutationHelper.changeBeforeStock(
-            e.itemID,
-            (await _mutationHelper.getBefore(cart.orderNumber, e.itemID))!
-                .orderNumber,
-            e.quantity - -(e.prevQuantity ?? 0));
       }
     }
     await instance
@@ -35,20 +30,32 @@ class CartHelper extends BaseHelper {
         .set(cart.toVariables());
   }
 
-  // Future<void> update(Cart cart) async {
-  //   await instance
-  //       .collection(collectionPath)
-  //       .doc(cart.id)
-  //       .update(cart.toVariables());
+  Future<void> update(Cart cart) async {
+    for (var e in cart.cartItems) {
+      Mutation? before =
+          await _mutationHelper.getBefore(cart.orderNumber, e.itemID);
 
-  //   for (var element in cart.cartItems) {
-  //     if (cart.buySell) {
-  //       _productsHelper.changeStock(element.itemID, -(element.quantity));
-  //     } else {
-  //       _productsHelper.changeStock(element.itemID, element.quantity);
-  //     }
-  //   }
-  // }
+      if (cart.buySell) {
+        _productsHelper.changeStock(
+            e.itemID, e.quantity - (e.prevQuantity ?? 0));
+        if (before != null) {
+          _mutationHelper.changeBeforeStock(
+              e.itemID, before.orderNumber, e.quantity - (e.prevQuantity ?? 0));
+        }
+      } else {
+        _productsHelper.changeStock(
+            e.itemID, -(e.quantity - (e.prevQuantity ?? 0)));
+        if (before != null) {
+          _mutationHelper.changeBeforeStock(e.itemID, before.orderNumber,
+              e.quantity - -(e.prevQuantity ?? 0));
+        }
+      }
+    }
+    await instance
+        .collection(collectionPath)
+        .doc(cart.id)
+        .update(cart.toVariables());
+  }
 
   Future<Cart> read(String id) async {
     var result = await instance.collection(collectionPath).doc(id).get();

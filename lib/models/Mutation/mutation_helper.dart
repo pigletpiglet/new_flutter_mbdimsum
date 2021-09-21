@@ -38,7 +38,12 @@ class MutationHelper extends BaseHelper {
   }
 
   Future<void> delete(String orderNumber, String itemID) async {
-    await instance.collection(collectionPath).doc(orderNumber).delete();
+    await instance
+        .collection(collectionPath)
+        .doc(itemID)
+        .collection("Mutasi")
+        .doc(orderNumber)
+        .delete();
   }
 
   Future<void> changeBeforeStock(
@@ -52,8 +57,8 @@ class MutationHelper extends BaseHelper {
 
     var listResult =
         result.docs.map((e) => Mutation.fromMap(e.data())).toList();
-    listResult.removeRange(
-        0, listResult.indexWhere((e) => e == mutationBefore));
+    var position = listResult.indexWhere((e) => e == mutationBefore);
+    listResult.removeRange(0, position == -1 ? 0 : position);
     for (var e in listResult) {
       await instance
           .collection(collectionPath)
@@ -71,7 +76,7 @@ class MutationHelper extends BaseHelper {
     //     .update({"stock": FieldValue.increment(quantity)});
   }
 
-  Future<Mutation?> getBefore(String orderNumber, String itemID) async {
+  Future<Mutation?> getBefore(String? orderNumber, String itemID) async {
     var result = await instance
         .collection(collectionPath)
         .doc(itemID)
