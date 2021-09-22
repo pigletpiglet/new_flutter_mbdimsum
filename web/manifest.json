@@ -1,11 +1,11 @@
 {
-    "name": "new_flutter_mbdimsum",
-    "short_name": "new_flutter_mbdimsum",
+    "name": "Flutter MB Dimsum",
+    "short_name": "Flutter MB Dimsum",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Flutter MB Dimsum",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

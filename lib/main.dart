@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Home Screen',
+      title: 'MB Dimsum',
       theme: ThemeData(
         fontFamily: "Ubuntu",
         primarySwatch: Colors.blue,
