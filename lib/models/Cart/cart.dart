@@ -87,7 +87,7 @@ class Cart {
   }
 
   static String getID(String str, DateTime time) {
-    return DateFormat('dd-MM-yyyy HH:mm:ss').format(time);
+    return DateFormat('ddMMyyyyHHmmss').format(time);
   }
 
   // int getTotalPrice() {

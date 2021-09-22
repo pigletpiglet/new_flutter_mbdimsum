@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:new_flutter_mbdimsum/models/Mutation/mutation.dart';
 import 'package:new_flutter_mbdimsum/models/Mutation/mutation_helper.dart';
 import 'package:new_flutter_mbdimsum/models/Products/products.dart';
+import 'package:new_flutter_mbdimsum/widgets/custom_text.dart';
 
 class ProductMutationPage extends StatefulWidget {
   Products products;
@@ -67,48 +68,93 @@ class _ProductMutationPageState extends State<ProductMutationPage> {
                             Expanded(
                               child: Column(
                                 children: [
-                                  Row(
-                                    children: [
-                                      const Text("Tanggal :"),
-                                      Text(datalist[i].dateString)
-                                    ],
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 5.0),
+                                    child: Row(
+                                      children: [Text(datalist[i].dateString)],
+                                    ),
                                   ),
-                                  Row(
-                                    children: [
-                                      const Text("Mutasi :"),
-                                      Builder(
-                                        builder: (context) {
-                                          if (datalist[i].buySell) {
-                                            return const Icon(Icons.add,
-                                                color: Colors.green);
-                                          } else {
-                                            return const Icon(Icons.remove,
-                                                color: Colors.red);
-                                          }
-                                        },
-                                      ),
-                                      Text(datalist[i].quantity.toString())
-                                    ],
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 5.0),
+                                    child: Row(
+                                      children: [
+                                        const Text("Customer : "),
+                                        Text(datalist[i].customerName)
+                                      ],
+                                    ),
                                   ),
-                                  Row(
-                                    children: [
-                                      const Text("Customer : "),
-                                      Text(datalist[i].customerName)
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      const Text("Price : "),
-                                      Text(datalist[i].price.toString())
-                                    ],
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 5.0),
+                                    child: Row(
+                                      children: [
+                                        const Text("Price : "),
+                                        Text("Rp. " +
+                                            datalist[i].price.toString())
+                                      ],
+                                    ),
                                   )
                                 ],
                               ),
                             ),
                             Column(
                               children: [
-                                const Text("Total :"),
-                                Text(datalist[i].stock.toString())
+                                Row(
+                                  children: [
+                                    const CustomText(
+                                      "Before :",
+                                      fontSize: 18,
+                                    ),
+                                    CustomText(
+                                      (datalist[i].stock).toString(),
+                                      fontSize: 18,
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Builder(
+                                      builder: (context) {
+                                        if (datalist[i].buySell) {
+                                          return const Icon(
+                                            Icons.add,
+                                            color: Colors.green,
+                                            size: 30,
+                                          );
+                                        } else {
+                                          return const Icon(
+                                            Icons.remove,
+                                            color: Colors.red,
+                                            size: 30,
+                                          );
+                                        }
+                                      },
+                                    ),
+                                    CustomText(
+                                      datalist[i].quantity.toString(),
+                                      fontSize: 18,
+                                    )
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    const CustomText(
+                                      "Stock :",
+                                      fontSize: 18,
+                                    ),
+                                    CustomText(
+                                      (datalist[i].buySell
+                                              ? (datalist[i].stock +
+                                                  datalist[i].quantity)
+                                              : (datalist[i].stock -
+                                                  datalist[i].quantity))
+                                          .toString(),
+                                      fontSize: 18,
+                                    ),
+                                  ],
+                                ),
                               ],
                             )
                           ],

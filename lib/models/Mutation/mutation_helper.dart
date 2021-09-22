@@ -7,13 +7,13 @@ import 'package:new_flutter_mbdimsum/models/cart_items/cart_items.dart';
 class MutationHelper extends BaseHelper {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   @override
-  String route = "Mutasi";
+  String route = "Mutation";
 
   Future<void> write(String itemID, Mutation mutation) async {
     await instance
         .collection(collectionPath)
         .doc(itemID)
-        .collection("Mutasi")
+        .collection("Mutation")
         .doc(mutation.orderNumber)
         .set(mutation.toVariables());
   }
@@ -41,9 +41,19 @@ class MutationHelper extends BaseHelper {
     await instance
         .collection(collectionPath)
         .doc(itemID)
-        .collection("Mutasi")
+        .collection("Mutation")
         .doc(orderNumber)
         .delete();
+  }
+
+  Future<void> changeQuantity(
+      String itemID, String orderNumber, int quantity) async {
+    await instance
+        .collection(collectionPath)
+        .doc(itemID)
+        .collection("Mutation")
+        .doc(orderNumber)
+        .update({"quantity": FieldValue.increment(quantity)});
   }
 
   Future<void> changeBeforeStock(
@@ -51,19 +61,21 @@ class MutationHelper extends BaseHelper {
     var result = await instance
         .collection(collectionPath)
         .doc(itemID)
-        .collection("Mutasi")
+        .collection("Mutation")
         .get();
     var mutationBefore = await getBefore(before, itemID);
 
     var listResult =
         result.docs.map((e) => Mutation.fromMap(e.data())).toList();
-    var position = listResult.indexWhere((e) => e == mutationBefore);
-    listResult.removeRange(0, position == -1 ? 0 : position);
+    var position = listResult
+        .indexWhere((e) => e.orderNumber == mutationBefore?.orderNumber);
+
+    listResult.removeRange(0, position <= -1 ? 0 : position + 1);
     for (var e in listResult) {
       await instance
           .collection(collectionPath)
           .doc(itemID)
-          .collection("Mutasi")
+          .collection("Mutation")
           .doc(e.orderNumber)
           .update({"stock": FieldValue.increment(quantity)});
     }
@@ -71,7 +83,7 @@ class MutationHelper extends BaseHelper {
     // await instance
     //     .collection(collectionPath)
     //     .doc(itemID)
-    //     .collection("Mutasi")
+    //     .collection("Mutation")
     //     .doc(mutationBefore.orderNumber)
     //     .update({"stock": FieldValue.increment(quantity)});
   }
@@ -80,16 +92,26 @@ class MutationHelper extends BaseHelper {
     var result = await instance
         .collection(collectionPath)
         .doc(itemID)
-        .collection("Mutasi")
+        .collection("Mutation")
+        .get();
+
+    var cart = await instance
+        .collection(collectionPath)
+        .doc(itemID)
+        .collection("Mutation")
+        .doc(orderNumber)
         .get();
 
     Mutation? before;
-    try {
-      before = Mutation.fromMap(result.docs.last.data());
-    } catch (e) {
-      before = null;
+    if (cart.data()?.isNotEmpty ?? false) {
+      before = Mutation.fromMap(cart.data() ?? {});
+    } else {
+      try {
+        before = Mutation.fromMap(result.docs.last.data());
+      } catch (e) {
+        before = null;
+      }
     }
-
     return before;
   }
 
@@ -106,7 +128,7 @@ class MutationHelper extends BaseHelper {
     var result = await instance
         .collection(collectionPath)
         .doc(productID)
-        .collection("Mutasi")
+        .collection("Mutation")
         .get();
 
     if (result.docs.isEmpty) return [];

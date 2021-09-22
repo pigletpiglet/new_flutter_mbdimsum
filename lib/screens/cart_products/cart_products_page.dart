@@ -92,6 +92,7 @@ class _CartProductsPageState extends State<CartProductsPage> {
                 ),
               ),
               child: TextFormField(
+                keyboardType: TextInputType.number,
                 controller:
                     TextEditingController(text: widget.item.price.toString()),
                 decoration: const InputDecoration(
@@ -129,6 +130,7 @@ class _CartProductsPageState extends State<CartProductsPage> {
                 ),
               ),
               child: TextFormField(
+                keyboardType: TextInputType.number,
                 controller: TextEditingController(
                     text: widget.item.quantity.toString()),
                 decoration: const InputDecoration(

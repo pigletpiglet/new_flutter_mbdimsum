@@ -42,6 +42,7 @@ class _AddProductsPageState extends State<AddProductsPage> {
               hintText: "e.g Buku.",
             ),
             NormalInput(
+              keyboardType: TextInputType.number,
               function: (String ans) {
                 products.stock = int.parse(ans);
               },
@@ -49,6 +50,7 @@ class _AddProductsPageState extends State<AddProductsPage> {
               hintText: "e.g 10.",
             ),
             NormalInput(
+              keyboardType: TextInputType.number,
               function: (String ans) {
                 products.price = int.parse(ans);
               },

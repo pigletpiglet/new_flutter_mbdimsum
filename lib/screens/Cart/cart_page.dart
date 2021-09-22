@@ -30,16 +30,22 @@ class _CartPageState extends State<CartPage> {
   late FirebaseFirestore firestore;
   late Cart pesanan;
 
+  late bool isUpdate;
+
   late List<CartItems> delete;
 
   @override
   void initState() {
     delete = [];
-    widget.cart = widget.cart != null
-        ? widget.cart?.isEmpty() ?? true
-            ? Cart.empty()
-            : widget.cart
-        : Cart.empty();
+
+    if (widget.cart != null) {
+      widget.cart = widget.cart?.isEmpty() ?? true ? Cart.empty() : widget.cart;
+      isUpdate = true;
+    } else {
+      widget.cart = Cart.empty();
+      isUpdate = false;
+    }
+
     super.initState();
   }
 
@@ -253,7 +259,11 @@ class _CartPageState extends State<CartPage> {
                               (widget.cart!.buySell ? -quantity : (quantity)));
                         }
                       }
-                      _cartHelper.write(widget.cart!);
+                      if (isUpdate) {
+                        _cartHelper.update(widget.cart!);
+                      } else {
+                        _cartHelper.write(widget.cart!);
+                      }
                       _mutationHelper.writeList(
                           widget.cart!.cartItems, widget.cart ?? Cart.empty());
                       Navigator.pop(context);

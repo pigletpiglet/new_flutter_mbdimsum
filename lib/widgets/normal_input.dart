@@ -3,8 +3,14 @@ import 'package:flutter/material.dart';
 class NormalInput extends StatefulWidget {
   Function(String)? function;
   String? hintText, labelText;
+  TextInputType? keyboardType;
 
-  NormalInput({Key? key, this.function, this.labelText, this.hintText})
+  NormalInput(
+      {Key? key,
+      this.function,
+      this.labelText,
+      this.hintText,
+      this.keyboardType})
       : super(key: key);
 
   @override
@@ -37,6 +43,7 @@ class _NormalInputState extends State<NormalInput> {
         )),
       ),
       child: TextFormField(
+        keyboardType: widget.keyboardType,
         decoration: InputDecoration(
           labelText: widget.labelText,
           hintText: widget.hintText,
